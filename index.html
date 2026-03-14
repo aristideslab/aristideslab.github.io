@@ -1,330 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ARI — Portfolio</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ari | TouchDesigner & Tech Art</title>
+    
+    <!-- Premium Google Fonts for 4 Distinct Themes + Wheel Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Space+Grotesk:wght@500;700;900&family=Syne:wght@600;800&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="site-wrapper">
+<!-- VISCOUS LIQUID BACKGROUND -->
+<div class="fluid-bg">
+    <div class="blob-container">
+        <div class="blob blob-cream"></div>
+        <div class="blob blob-orange"></div>
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-deep"></div>
+    </div>
+</div>
+<!-- SVG NOISE FILTER LAYER -->
+<div class="noise-overlay"></div>
 
-    <!-- ======================== -->
-    <!-- CONTENT AREA (Left)     -->
-    <!-- ======================== -->
-    <main class="content-area">
-
-      <!-- ===== ARI (About) ===== -->
-      <section class="section section-ari active" id="section-ari">
-        <h1 class="ari-title">ARI</h1>
-        <p class="ari-subtitle">Creative Technologist &bull; Digital Artist</p>
-        <div class="ari-bio">
-          <p>
-            Exploring the intersection of <strong>technology</strong> and <strong>visual art</strong>
-            through interactive installations and digital experiences. Bridging the gap between
-            fashion, generative art, and immersive environments — building worlds that blur
-            the line between the physical and the digital.
-          </p>
-        </div>
-        <p class="ari-tagline">Create &bull; Iterate &bull; Transcend</p>
-      </section>
-
-      <!-- ===== PORTFOLIO ===== -->
-      <section class="section section-portfolio" id="section-portfolio">
-        <h2 class="portfolio-header">Portfolio</h2>
-        <p class="portfolio-subtext">Selected works &mdash; TouchDesigner, Generative Art &amp; Digital Fashion</p>
-
-        <div class="video-grid">
-
-          <!--
-            ==========================================
-            HOW TO ADD YOUR INSTAGRAM REELS:
-
-            1. Download your Reel as an .mp4 file
-               (use your own Instagram data export,
-                or screen-record your own content).
-            2. Place the .mp4 file in the /videos folder.
-            3. Update the <source src="..."> below.
-            4. Update the poster="" with a thumbnail jpg.
-            ==========================================
-          -->
-
-          <!-- Video 1 -->
-          <div class="video-card fade-in">
-            <video
-              preload="metadata"
-              playsinline
-              loop
-              muted
-              poster=""
-            >
-              <source src="videos/reel-01.mp4" type="video/mp4" />
-            </video>
-            <div class="video-overlay">
-              <span class="play-icon">▶</span>
-              <span class="video-title">Project 01</span>
+<div class="layout">
+    <!-- LEFT SIDE: SCROLLING CONTENT -->
+    <!-- It now spans 100vw so scrolling works anywhere -->
+    <main id="scroller">
+        
+        <section id="ari">
+            <div class="content-wrapper float-anim">
+                <h2 class="theme-ari">Ari.</h2>
+                <p>I am a digital artist and premier web developer specializing in off-center rendering and immersive experiences. Welcome to my digital sandbox.</p>
             </div>
-          </div>
+        </section>
 
-          <!-- Video 2 -->
-          <div class="video-card fade-in">
-            <video
-              preload="metadata"
-              playsinline
-              loop
-              muted
-              poster=""
-            >
-              <source src="videos/reel-02.mp4" type="video/mp4" />
-            </video>
-            <div class="video-overlay">
-              <span class="play-icon">▶</span>
-              <span class="video-title">Project 02</span>
+        <section id="portfolio">
+            <div class="content-wrapper float-anim-delayed">
+                <h2 class="theme-portfolio">Portfolio.</h2>
+                <p>Recent experiments and Patreon drops.</p>
+                <div class="video-grid">
+                    <div class="video-card">
+                        <video autoplay loop muted playsinline src="https://cdn.pixabay.com/video/2020/05/25/40140-424754388_large.mp4"></video>
+                    </div>
+                    <div class="video-card">
+                        <video autoplay loop muted playsinline src="https://cdn.pixabay.com/video/2021/08/11/84687-586749870_large.mp4"></video>
+                    </div>
+                </div>
             </div>
-          </div>
+        </section>
 
-          <!-- Video 3 -->
-          <div class="video-card fade-in">
-            <video
-              preload="metadata"
-              playsinline
-              loop
-              muted
-              poster=""
-            >
-              <source src="videos/reel-03.mp4" type="video/mp4" />
-            </video>
-            <div class="video-overlay">
-              <span class="play-icon">▶</span>
-              <span class="video-title">Project 03</span>
+        <section id="skills">
+            <div class="content-wrapper float-anim">
+                <h2 class="theme-skills">Skills.</h2>
+                <p>The software stack used to bring these visions to life in real-time and post-production.</p>
+                <div class="tags">
+                    <span class="tag theme-skills">TouchDesigner</span>
+                    <span class="tag theme-skills">Unreal Engine</span>
+                    <span class="tag theme-skills">CLO3D</span>
+                    <span class="tag theme-skills">Adobe Suite</span>
+                </div>
             </div>
-          </div>
+        </section>
 
-          <!-- Video 4 -->
-          <div class="video-card fade-in">
-            <video
-              preload="metadata"
-              playsinline
-              loop
-              muted
-              poster=""
-            >
-              <source src="videos/reel-04.mp4" type="video/mp4" />
-            </video>
-            <div class="video-overlay">
-              <span class="play-icon">▶</span>
-              <span class="video-title">Project 04</span>
+        <section id="contact">
+            <div class="content-wrapper float-anim-delayed">
+                <!-- Massive Contact Heading -->
+                <h2 class="theme-contact massive-heading">Contact.</h2>
+                <p>Let's build something beautiful. Available for freelance rendering and installations.</p>
+                <div class="tags">
+                    <a href="#" class="tag theme-contact">Instagram</a>
+                    <a href="#" class="tag theme-contact">Patreon</a>
+                    <a href="#" class="tag theme-contact">Email Me</a>
+                </div>
             </div>
-          </div>
-
-          <!-- Video 5 -->
-          <div class="video-card fade-in">
-            <video
-              preload="metadata"
-              playsinline
-              loop
-              muted
-              poster=""
-            >
-              <source src="videos/reel-05.mp4" type="video/mp4" />
-            </video>
-            <div class="video-overlay">
-              <span class="play-icon">▶</span>
-              <span class="video-title">Project 05</span>
-            </div>
-          </div>
-
-          <!-- Video 6 -->
-          <div class="video-card fade-in">
-            <video
-              preload="metadata"
-              playsinline
-              loop
-              muted
-              poster=""
-            >
-              <source src="videos/reel-06.mp4" type="video/mp4" />
-            </video>
-            <div class="video-overlay">
-              <span class="play-icon">▶</span>
-              <span class="video-title">Project 06</span>
-            </div>
-          </div>
-
-        </div><!-- /.video-grid -->
-
-        <!-- External Links -->
-        <div class="portfolio-links">
-          <!-- UPDATE THESE URLs with your actual profiles -->
-          <a href="https://www.instagram.com/YOUR_HANDLE/" target="_blank" rel="noopener" class="portfolio-link">
-            &#9654; Instagram
-          </a>
-          <a href="https://www.patreon.com/YOUR_HANDLE" target="_blank" rel="noopener" class="portfolio-link">
-            &#9829; Patreon
-          </a>
-        </div>
-      </section>
-
-      <!-- ===== SKILLS ===== -->
-      <section class="section section-skills" id="section-skills">
-        <h2 class="skills-header">Skills</h2>
-
-        <div class="skills-grid">
-
-          <div class="skill-card fade-in">
-            <div class="skill-name">CLO3D</div>
-            <div class="skill-desc">3D Fashion Design — Digital garment creation, pattern making, and fabric simulation for virtual fashion.</div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="90%"></div></div>
-          </div>
-
-          <div class="skill-card fade-in">
-            <div class="skill-name">TouchDesigner</div>
-            <div class="skill-desc">Interactive & Generative Art — Real-time visual programming for immersive installations and live performances.</div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="95%"></div></div>
-          </div>
-
-          <div class="skill-card fade-in">
-            <div class="skill-name">Unreal Engine</div>
-            <div class="skill-desc">Real-time 3D & Virtual Production — Photorealistic environments, virtual worlds, and interactive experiences.</div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="80%"></div></div>
-          </div>
-
-          <div class="skill-card fade-in">
-            <div class="skill-name">Adobe Suite</div>
-            <div class="skill-desc">Photoshop &bull; After Effects &bull; Premiere Pro &bull; Illustrator — Complete creative pipeline from concept to delivery.</div>
-            <div class="skill-bar"><div class="skill-bar-fill" data-width="92%"></div></div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ===== CONTACT ===== -->
-      <section class="section section-contact" id="section-contact">
-        <h2 class="contact-header">Get in Touch</h2>
-        <p class="contact-subtext">Let's create something extraordinary together.</p>
-
-        <div class="contact-list">
-          <!-- UPDATE these URLs and email -->
-          <a href="https://www.instagram.com/YOUR_HANDLE/" target="_blank" rel="noopener" class="contact-item fade-in">
-            <span class="contact-icon">📷</span>
-            <div class="contact-info">
-              <span class="contact-label">Instagram</span>
-              <span class="contact-value">@YOUR_HANDLE</span>
-            </div>
-          </a>
-
-          <a href="https://www.patreon.com/YOUR_HANDLE" target="_blank" rel="noopener" class="contact-item fade-in">
-            <span class="contact-icon">❤️</span>
-            <div class="contact-info">
-              <span class="contact-label">Patreon</span>
-              <span class="contact-value">Support my work</span>
-            </div>
-          </a>
-
-          <a href="mailto:ari@example.com" class="contact-item fade-in">
-            <span class="contact-icon">✉️</span>
-            <div class="contact-info">
-              <span class="contact-label">Email</span>
-              <span class="contact-value">ari@example.com</span>
-            </div>
-          </a>
-        </div>
-      </section>
-
+        </section>
+        
     </main>
 
-    <!-- ======================== -->
-    <!-- NAV PANEL (Right Hub)   -->
-    <!-- ======================== -->
-    <nav class="nav-panel">
-      <ul class="nav-menu">
-        <li class="nav-item active" data-section="section-ari">
-          Ari
-          <span class="nav-hint">About Me</span>
-        </li>
-        <li class="nav-item" data-section="section-portfolio">
-          Portfolio
-          <span class="nav-hint">Reels &amp; Projects</span>
-        </li>
-        <li class="nav-item" data-section="section-skills">
-          Skills
-          <span class="nav-hint">Tools &amp; Software</span>
-        </li>
-        <li class="nav-item" data-section="section-contact">
-          Contact
-          <span class="nav-hint">Get in Touch</span>
-        </li>
-      </ul>
-    </nav>
+    <!-- RIGHT SIDE: HUB & SPOKE MENU -->
+    <aside>
+        <!-- The glowing orbital ring -->
+        <div class="circle-hub">
+            <div class="circle-glow"></div>
+        </div>
+        
+        <ul class="spoke-menu">
+            <!-- Fonts here are unified in CSS now -->
+            <li data-target="ari"><a href="#ari">ARI</a></li>
+            <li data-target="portfolio"><a href="#portfolio">PORTFOLIO</a></li>
+            <li data-target="skills"><a href="#skills">SKILLS</a></li>
+            <li data-target="contact"><a href="#contact">CONTACT</a></li>
+        </ul>
+    </aside>
+</div>
 
-  </div><!-- /.site-wrapper -->
+<!-- Interaction Script: True Radial Wheel Logic -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll("section");
+        const menuItems = Array.from(document.querySelectorAll(".spoke-menu li"));
 
-  <!-- ======================== -->
-  <!-- Minimal Vanilla JS       -->
-  <!-- ======================== -->
-  <script>
-    // --- Section Navigation ---
-    const navItems = document.querySelectorAll('.nav-item');
-    const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Trigger Scroll Reveal
+                    entry.target.classList.add('in-view');
 
-    function switchSection(targetId) {
-      // Deactivate all
-      navItems.forEach(item => item.classList.remove('active'));
-      sections.forEach(sec => {
-        sec.classList.remove('active');
-        sec.style.display = 'none';
-      });
+                    const id = entry.target.getAttribute("id");
+                    const activeIndex = menuItems.findIndex(item => item.getAttribute('data-target') === id);
 
-      // Activate target
-      const targetNav = document.querySelector(`.nav-item[data-section="${targetId}"]`);
-      const targetSection = document.getElementById(targetId);
-      if (targetNav) targetNav.classList.add('active');
-      if (targetSection) {
-        targetSection.style.display = 'block';
-        // Trigger reflow for animation
-        void targetSection.offsetWidth;
-        targetSection.classList.add('active');
-      }
+                    // Mathematical Radial Scroll Logic
+                    menuItems.forEach((item, index) => {
+                        const offset = index - activeIndex; 
+                        
+                        if (offset === 0) {
+                            // THE ACTIVE ITEM
+                            item.style.setProperty('--target-top', '30%');
+                            item.style.setProperty('--target-right', '5vw');
+                            item.style.setProperty('--target-rot', '0deg');
+                            item.style.setProperty('--target-scale', '1.4'); 
+                            item.style.setProperty('--target-opacity', '1');
+                            item.classList.add("active");
+                        } else {
+                            // THE INACTIVE ITEMS (Curve along the wheel)
+                            const spacing = 16; // Vertical distance between items
+                            const curveAmount = 1.5; // How sharply they bend to the right
+                            
+                            const topPos = 30 + (offset * spacing);
+                            // Push items further right (closer to edge) based on their distance from active
+                            const rightPos = 5 - (Math.pow(Math.abs(offset), curveAmount) * 1.5); 
+                            // Rotate them like spokes on a wheel
+                            const rotation = offset * 22; 
 
-      // Animate skill bars when Skills section opens
-      if (targetId === 'section-skills') {
-        setTimeout(() => {
-          document.querySelectorAll('.skill-bar-fill').forEach(bar => {
-            bar.style.width = bar.getAttribute('data-width');
-          });
-        }, 200);
-      } else {
-        document.querySelectorAll('.skill-bar-fill').forEach(bar => {
-          bar.style.width = '0';
+                            item.style.setProperty('--target-top', `${topPos}%`);
+                            item.style.setProperty('--target-right', `${rightPos}vw`);
+                            item.style.setProperty('--target-rot', `${rotation}deg`);
+                            item.style.setProperty('--target-scale', '0.35'); // Make much smaller
+                            item.style.setProperty('--target-opacity', '0.4');
+                            item.classList.remove("active");
+                        }
+                    });
+                } else {
+                    entry.target.classList.remove('in-view');
+                }
+            });
+        }, {
+            root: document.getElementById('scroller'),
+            threshold: 0.5 
         });
-      }
-    }
 
-    navItems.forEach(item => {
-      item.addEventListener('click', () => {
-        switchSection(item.getAttribute('data-section'));
-      });
+        sections.forEach(section => observer.observe(section));
     });
-
-    // --- Video Hover Play ---
-    document.querySelectorAll('.video-card').forEach(card => {
-      const video = card.querySelector('video');
-      if (!video) return;
-
-      card.addEventListener('mouseenter', () => {
-        video.play().catch(() => {});
-      });
-
-      card.addEventListener('mouseleave', () => {
-        video.pause();
-        video.currentTime = 0;
-      });
-    });
-
-    // --- Initial state: ensure only ARI is visible ---
-    switchSection('section-ari');
-  </script>
+</script>
 
 </body>
 </html>
