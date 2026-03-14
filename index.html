@@ -4,159 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ari | TouchDesigner & Tech Art</title>
-    
-    <!-- Premium Google Fonts for 4 Distinct Themes + Wheel Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Space+Grotesk:wght@500;700;900&family=Syne:wght@600;800&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-
-    <!-- External CSS -->
+    <!-- Simple, utilitarian system fonts -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- VISCOUS LIQUID BACKGROUND -->
-<div class="fluid-bg">
-    <div class="blob-container">
-        <div class="blob blob-cream"></div>
-        <div class="blob blob-orange"></div>
-        <div class="blob blob-purple"></div>
-        <div class="blob blob-deep"></div>
-    </div>
-</div>
-<!-- SVG NOISE FILTER LAYER -->
-<div class="noise-overlay"></div>
-
-<div class="layout">
-    <!-- LEFT SIDE: SCROLLING CONTENT -->
-    <!-- It now spans 100vw so scrolling works anywhere -->
-    <main id="scroller">
-        
-        <section id="ari">
-            <div class="content-wrapper float-anim">
-                <h2 class="theme-ari">Ari.</h2>
-                <p>I am a digital artist and premier web developer specializing in rendering.</p>
-            </div>
-        </section>
-
-        <section id="portfolio">
-            <div class="content-wrapper float-anim-delayed">
-                <h2 class="theme-portfolio">Portfolio.</h2>
-                <p>Recent experiments and Patreon drops.</p>
-                <div class="video-grid">
-                    <div class="video-card">
-                        <video autoplay loop muted playsinline src="https://cdn.pixabay.com/video/2020/05/25/40140-424754388_large.mp4"></video>
-                    </div>
-                    <div class="video-card">
-                        <video autoplay loop muted playsinline src="https://cdn.pixabay.com/video/2021/08/11/84687-586749870_large.mp4"></video>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="skills">
-            <div class="content-wrapper float-anim">
-                <h2 class="theme-skills">Skills.</h2>
-                <p>The software stack used to bring these visions to life in real-time and post-production.</p>
-                <div class="tags">
-                    <span class="tag theme-skills">TouchDesigner</span>
-                    <span class="tag theme-skills">Unreal Engine</span>
-                    <span class="tag theme-skills">CLO3D</span>
-                    <span class="tag theme-skills">Adobe Suite</span>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact">
-            <div class="content-wrapper float-anim-delayed">
-                <!-- Massive Contact Heading -->
-                <h2 class="theme-contact massive-heading">Contact.</h2>
-                <p>Let's build something beautiful. Available for freelance rendering and installations.</p>
-                <div class="tags">
-                    <a href="#" class="tag theme-contact">Instagram</a>
-                    <a href="#" class="tag theme-contact">Patreon</a>
-                    <a href="#" class="tag theme-contact">Email Me</a>
-                </div>
-            </div>
-        </section>
-        
-    </main>
-
-    <!-- RIGHT SIDE: HUB & SPOKE MENU -->
-    <aside>
-        <!-- The glowing orbital ring -->
-        <div class="circle-hub">
-            <div class="circle-glow"></div>
+<div class="container">
+    <!-- LEFT SIDEBAR NAVIGATION -->
+    <nav class="sidebar">
+        <div class="brand">
+            <h1>ARI.</h1>
+            <span class="subtitle">Digital Artist</span>
         </div>
-        
-        <ul class="spoke-menu">
-            <!-- Fonts here are unified in CSS now -->
-            <li data-target="ari"><a href="#ari">ARI</a></li>
-            <li data-target="portfolio"><a href="#portfolio">PORTFOLIO</a></li>
-            <li data-target="skills"><a href="#skills">SKILLS</a></li>
-            <li data-target="contact"><a href="#contact">CONTACT</a></li>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
-    </aside>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="content">
+        
+        <!-- ABOUT -->
+        <section id="about" class="block">
+            <div class="block-header">
+                <h2>01. About</h2>
+            </div>
+            <div class="block-content">
+                <p>I am a digital artist and premier web developer specializing in immersive experiences and technical rendering. Welcome to my digital sandbox.</p>
+            </div>
+        </section>
+
+        <!-- PORTFOLIO -->
+        <section id="portfolio" class="block">
+            <div class="block-header">
+                <h2>02. Portfolio</h2>
+            </div>
+            <div class="block-content">
+                <p>Recent experiments and Patreon drops.</p>
+                
+                <div class="video-grid">
+                    <div class="video-container">
+                        <video autoplay loop muted playsinline src="https://cdn.pixabay.com/video/2020/05/25/40140-424754388_large.mp4"></video>
+                        <div class="caption">Project_01.mp4</div>
+                    </div>
+                    <div class="video-container">
+                        <video autoplay loop muted playsinline src="https://cdn.pixabay.com/video/2021/08/11/84687-586749870_large.mp4"></video>
+                        <div class="caption">Project_02.mp4</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills" class="block">
+            <div class="block-header">
+                <h2>03. Skills</h2>
+            </div>
+            <div class="block-content">
+                <p>The software stack used to bring these visions to life in real-time and post-production.</p>
+                <div class="tag-grid">
+                    <div class="tag">TouchDesigner</div>
+                    <div class="tag">Unreal Engine</div>
+                    <div class="tag">CLO3D</div>
+                    <div class="tag">Adobe Suite</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact" class="block">
+            <div class="block-header">
+                <h2>04. Contact</h2>
+            </div>
+            <div class="block-content">
+                <p>Let's build something beautiful. Available for freelance rendering and installations.</p>
+                <div class="tag-grid">
+                    <a href="#" class="tag link">Instagram</a>
+                    <a href="#" class="tag link">Patreon</a>
+                    <a href="#" class="tag link">Email</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
 </div>
-
-<!-- Interaction Script: True Radial Wheel Logic -->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const sections = document.querySelectorAll("section");
-        const menuItems = Array.from(document.querySelectorAll(".spoke-menu li"));
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Trigger Scroll Reveal
-                    entry.target.classList.add('in-view');
-
-                    const id = entry.target.getAttribute("id");
-                    const activeIndex = menuItems.findIndex(item => item.getAttribute('data-target') === id);
-
-                    // Mathematical Radial Scroll Logic
-                    menuItems.forEach((item, index) => {
-                        const offset = index - activeIndex; 
-                        
-                        if (offset === 0) {
-                            // THE ACTIVE ITEM
-                            item.style.setProperty('--target-top', '30%');
-                            item.style.setProperty('--target-right', '5vw');
-                            item.style.setProperty('--target-rot', '0deg');
-                            item.style.setProperty('--target-scale', '1.4'); 
-                            item.style.setProperty('--target-opacity', '1');
-                            item.classList.add("active");
-                        } else {
-                            // THE INACTIVE ITEMS (Curve along the wheel)
-                            const spacing = 16; // Vertical distance between items
-                            const curveAmount = 1.5; // How sharply they bend to the right
-                            
-                            const topPos = 30 + (offset * spacing);
-                            // Push items further right (closer to edge) based on their distance from active
-                            const rightPos = 5 - (Math.pow(Math.abs(offset), curveAmount) * 1.5); 
-                            // Rotate them like spokes on a wheel
-                            const rotation = offset * 22; 
-
-                            item.style.setProperty('--target-top', `${topPos}%`);
-                            item.style.setProperty('--target-right', `${rightPos}vw`);
-                            item.style.setProperty('--target-rot', `${rotation}deg`);
-                            item.style.setProperty('--target-scale', '0.35'); // Make much smaller
-                            item.style.setProperty('--target-opacity', '0.4');
-                            item.classList.remove("active");
-                        }
-                    });
-                } else {
-                    entry.target.classList.remove('in-view');
-                }
-            });
-        }, {
-            root: document.getElementById('scroller'),
-            threshold: 0.5 
-        });
-
-        sections.forEach(section => observer.observe(section));
-    });
-</script>
 
 </body>
 </html>
