@@ -1,1 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ari | TouchDesigner & Tech Art</title>
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
 
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="layout">
+    <!-- LEFT SIDE: SCROLLING CONTENT -->
+    <main id="scroller">
+        
+        <section id="ari">
+            <div class="content-wrapper">
+                <h2>Ari.</h2>
+                <p>I am a digital artist and premier web developer specializing in off-center rendering and immersive experiences. Welcome to my digital sandbox.</p>
+            </div>
+        </section>
+
+        <section id="portfolio">
+            <div class="content-wrapper">
+                <h2>Portfolio.</h2>
+                <p>Recent experiments and Patreon drops.</p>
+                <div class="video-grid">
+                    <div class="video-card">
+                        <!-- Replace src with your local assets/videos/reel1.mp4 -->
+                        <video autoplay loop muted playsinline src="https://cdn.pixabay.com/video/2020/05/25/40140-424754388_large.mp4"></video>
+                    </div>
+                    <div class="video-card">
+                        <video autoplay loop muted playsinline src="https://cdn.pixabay.com/video/2021/08/11/84687-586749870_large.mp4"></video>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="content-wrapper">
+                <h2>Skills.</h2>
+                <p>The software stack used to bring these visions to life in real-time and post-production.</p>
+                <div class="tags">
+                    <span class="tag">TouchDesigner</span>
+                    <span class="tag">Unreal Engine</span>
+                    <span class="tag">CLO3D</span>
+                    <span class="tag">Adobe Suite</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="content-wrapper">
+                <h2>Contact.</h2>
+                <p>Let's build something beautiful. Available for freelance rendering and installations.</p>
+                <div class="tags">
+                    <a href="#" class="tag">Instagram</a>
+                    <a href="#" class="tag">Patreon</a>
+                    <a href="#" class="tag">Email Me</a>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- RIGHT SIDE: HUB & SPOKE -->
+    <aside>
+        <div class="circle-hub"></div>
+        <ul class="spoke-menu">
+            <li style="--pos-y: 20%; --rot: -20deg;" data-target="ari"><a href="#ari">ARI</a></li>
+            <li style="--pos-y: 40%; --rot: -7deg;" data-target="portfolio"><a href="#portfolio">PORTFOLIO</a></li>
+            <li style="--pos-y: 60%; --rot: 7deg;" data-target="skills"><a href="#skills">SKILLS</a></li>
+            <li style="--pos-y: 80%; --rot: 20deg;" data-target="contact"><a href="#contact">CONTACT</a></li>
+        </ul>
+    </aside>
+</div>
+
+<!-- Interaction Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll("section");
+        const menuItems = document.querySelectorAll(".spoke-menu li");
+
+        // Intersection Observer handles both the menu highlight AND the scroll reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // 1. Trigger the CSS scroll reveal animation
+                    entry.target.classList.add('in-view');
+
+                    // 2. Handle the right-hand menu highlights
+                    menuItems.forEach(item => item.classList.remove("active"));
+                    const id = entry.target.getAttribute("id");
+                    const activeMenu = document.querySelector(`.spoke-menu li[data-target="${id}"]`);
+                    if(activeMenu) activeMenu.classList.add("active");
+                } else {
+                    // Optional: remove class when out of view so it animates again when scrolling back up
+                    entry.target.classList.remove('in-view');
+                }
+            });
+        }, {
+            root: document.getElementById('scroller'),
+            threshold: 0.4 // Triggers when 40% of the section is visible
+        });
+
+        sections.forEach(section => observer.observe(section));
+    });
+</script>
+
+</body>
+</html>
