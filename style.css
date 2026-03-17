@@ -9,19 +9,18 @@
 
 html {
     scroll-behavior: smooth;
-    background-color: #050505;
 }
 
 body {
-    /* Classic technical sans-serif stack */
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    color: #cccccc;
+    background-color: #ffffff;
+    color: #000000;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
 }
 
 a {
-    color: #ffffff;
+    color: #000000;
     text-decoration: none;
 }
 
@@ -31,100 +30,56 @@ p {
 }
 
 /* ==========================================
-   LAYOUT GRID
+   THEME TOGGLE
    ========================================== */
-.container {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* LEFT NAV */
-.sidebar {
+.theme-toggle {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100vh;
-    background-color: #0a0a0a;
-    border-right: 1px solid #222222;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-}
-
-.brand {
-    margin-bottom: 4rem;
-    border-bottom: 1px solid #222222;
-    padding-bottom: 1rem;
-}
-
-.brand h1 {
+    top: 1rem;
+    right: 1rem;
+    z-index: 100;
+    background: #000000;
     color: #ffffff;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-    font-weight: normal;
-    text-transform: uppercase;
-}
-
-.subtitle {
+    border: 1px solid #000000;
+    padding: 0.4rem 0.8rem;
+    font-family: monospace;
     font-size: 0.75rem;
-    color: #666666;
     text-transform: uppercase;
     letter-spacing: 1px;
+    cursor: pointer;
 }
 
-.nav-links {
-    list-style: none;
-}
-
-.nav-links li {
-    margin-bottom: 0.5rem;
-}
-
-.nav-links a {
-    display: block;
-    padding: 0.5rem 0;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #888888;
-    border-left: 2px solid transparent;
-    padding-left: 10px;
-    transition: none; /* No smooth fading, instant hover like 2000s sites */
-}
-
-.nav-links a:hover {
-    color: #ffffff;
-    background-color: #111111;
-    border-left: 2px solid #ffffff;
-}
-
-/* MAIN CONTENT */
-.content {
-    margin-left: 250px;
-    padding: 2rem 4rem;
-    width: calc(100% - 250px);
+.theme-toggle:hover {
+    opacity: 0.7;
 }
 
 /* ==========================================
-   CONTENT BLOCKS (Squares & Rectangles only)
+   LAYOUT
+   ========================================== */
+.content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 4rem;
+}
+
+/* ==========================================
+   CONTENT BLOCKS
    ========================================== */
 .block {
-    background-color: #0a0a0a;
-    border: 1px solid #222222;
+    background-color: #f8f8f8;
+    border: 1px solid #dddddd;
     margin-bottom: 2rem;
 }
 
 .block-header {
-    background-color: #111111;
-    border-bottom: 1px solid #222222;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #dddddd;
     padding: 1rem 1.5rem;
 }
 
 .block-header h2 {
     font-size: 1rem;
     font-weight: normal;
-    color: #ffffff;
+    color: #000000;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -134,33 +89,16 @@ p {
 }
 
 /* ==========================================
-   VIDEO GRID
+   VIDEO / EMBED GRID
    ========================================== */
 .video-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
-    max-width: 800px;
 }
 
 .video-container {
-    background-color: #000000;
-    border: 1px solid #333333;
-    padding: 0.5rem;
-}
-
-.video-container video {
-    width: 100%;
-    display: block;
-    border: 1px solid #222222;
-}
-
-.caption {
-    font-family: monospace;
-    font-size: 0.75rem;
-    color: #666666;
-    margin-top: 0.5rem;
-    text-align: right;
+    min-width: 0;
 }
 
 /* ==========================================
@@ -173,61 +111,82 @@ p {
 }
 
 .tag {
-    background-color: #111111;
-    border: 1px solid #333333;
+    background-color: #f0f0f0;
+    border: 1px solid #cccccc;
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #cccccc;
+    color: #000000;
 }
 
 a.tag.link {
+    background-color: #ffffff;
+    border-color: #999999;
+}
+
+a.tag.link:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+/* ==========================================
+   DARK MODE
+   ========================================== */
+body.dark {
+    background-color: #050505;
+    color: #cccccc;
+}
+
+body.dark a {
+    color: #ffffff;
+}
+
+body.dark .theme-toggle {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
+
+body.dark .block {
+    background-color: #0a0a0a;
+    border-color: #222222;
+}
+
+body.dark .block-header {
+    background-color: #111111;
+    border-color: #222222;
+}
+
+body.dark .block-header h2 {
+    color: #ffffff;
+}
+
+body.dark .tag {
+    background-color: #111111;
+    border-color: #333333;
+    color: #cccccc;
+}
+
+body.dark a.tag.link {
     background-color: #000000;
     border-color: #444444;
 }
 
-a.tag.link:hover {
+body.dark a.tag.link:hover {
     background-color: #ffffff;
     color: #000000;
 }
 
 /* ==========================================
-   RESPONSIVE (Mobile layout)
+   RESPONSIVE
    ========================================== */
 @media (max-width: 768px) {
-    .container {
-        flex-direction: column;
-    }
-    
-    .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid #222222;
-    }
-    
     .content {
-        margin-left: 0;
-        width: 100%;
         padding: 1rem;
     }
-    
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-    
-    .nav-links a {
-        border-left: none;
-        padding-left: 0;
-    }
-    
-    .nav-links a:hover {
-        border-left: none;
-        text-decoration: underline;
-        background: transparent;
+
+    .video-grid {
+        grid-template-columns: 1fr;
     }
 }
