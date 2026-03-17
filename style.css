@@ -376,62 +376,49 @@ body.dark .yt-channel-card:hover .yt-sub {
    ========================================== */
 #snake-warning {
     position: fixed;
-    top: 0;
+    top: 6px;
     left: 0;
     width: 100%;
     z-index: 9998;
-    padding: 0.4rem 0;
     text-align: center;
     font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-    font-size: 0.65rem;
-    text-transform: uppercase;
+    font-size: 0.6rem;
     letter-spacing: 2px;
-    color: #888888;
-    background: transparent;
-}
-
-body.dark #snake-warning {
-    color: #555555;
-}
-
-#snake-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 9999;
-    background: transparent;
-}
-
-#snake-hud {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
-    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #000000;
-    z-index: 10001;
+    color: #aaaaaa;
+    background: none;
     pointer-events: none;
 }
 
-body.dark #snake-hud {
-    color: #cccccc;
+body.dark #snake-warning {
+    color: #444444;
 }
 
 #snake-canvas {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+#snake-hud {
+    position: fixed;
+    top: 6px;
+    left: 0;
     width: 100%;
-    height: 100%;
-    display: block;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: #000000;
+    z-index: 10001;
+    pointer-events: none;
+}
+
+body.dark #snake-hud {
+    color: #888888;
 }
 
 #snake-gameover {
@@ -440,38 +427,31 @@ body.dark #snake-hud {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
     z-index: 10002;
-}
-
-.snake-go-box {
-    text-align: center;
     font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
     color: #ffffff;
-    border: 1px solid #ffffff;
-    padding: 2rem 3rem;
-    background: rgba(0, 0, 0, 0.9);
+    text-align: center;
 }
 
 #snake-go-text {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     font-weight: bold;
     letter-spacing: 3px;
-    margin-bottom: 1rem;
 }
 
 #snake-go-score {
-    font-size: 1rem;
+    font-size: 0.8rem;
     letter-spacing: 2px;
-    margin-bottom: 1rem;
 }
 
 #snake-go-hint {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     color: #888888;
-    text-transform: uppercase;
     letter-spacing: 1px;
 }
