@@ -7,18 +7,14 @@
         if (gameActive) return;
         if (e.key === 'w' || e.key === 'W') {
             clearTimeout(wTimeout);
-
             wPressCount++;
 
             if (wPressCount === 1) {
-                // First press — reset after 3 seconds if no follow-up
                 wTimeout = setTimeout(function() { wPressCount = 0; }, 3000);
             } else if (wPressCount === 2) {
-                // Second press — show warning
                 showWarning();
                 wTimeout = setTimeout(function() { wPressCount = 0; removeWarning(); }, 5000);
             } else if (wPressCount >= 3) {
-                // Third press — launch snake
                 wPressCount = 0;
                 removeWarning();
                 launchSnake();
@@ -30,7 +26,7 @@
         if (document.getElementById('snake-warning')) return;
         var w = document.createElement('div');
         w.id = 'snake-warning';
-        w.innerHTML = '<div class="snake-warning-box">WARNING: You are about to enter snake mode.<br>Press <b>W</b> again to play.</div>';
+        w.textContent = 'press W again to enter snake mode';
         document.body.appendChild(w);
     }
 
@@ -42,32 +38,17 @@
     function launchSnake() {
         gameActive = true;
 
-        // Hide sidebar links
+        // Lock scrolling
+        document.body.style.overflow = 'hidden';
+        window.scrollTo(0, 0);
+
+        // Hide sidebar
         var sidebar = document.querySelector('.social-sidebar');
         if (sidebar) sidebar.style.display = 'none';
 
-        // Create fullscreen overlay
+        // Create transparent overlay with canvas covering the whole page
         var overlay = document.createElement('div');
         overlay.id = 'snake-overlay';
-
-        var labels = ['IG', 'PA', 'GH', 'YT'];
-
-        // Grid config
-        var COLS = 20;
-        var ROWS = 20;
-        var CELL = 0; // computed on resize
-
-        // Game state
-        var snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}, {x: 7, y: 10}];
-        var dir = {x: 1, y: 0};
-        var nextDir = {x: 1, y: 0};
-        var food = {x: 15, y: 10};
-        var score = 0;
-        var gameOver = false;
-        var interval = null;
-        var speed = 130;
-
-        // Build overlay HTML
         overlay.innerHTML =
             '<div id="snake-hud">' +
                 '<span id="snake-score">SCORE: 0</span>' +
@@ -78,23 +59,27 @@
                 '<div class="snake-go-box">' +
                     '<div id="snake-go-text">GAME OVER</div>' +
                     '<div id="snake-go-score"></div>' +
-                    '<div id="snake-go-hint">Press SPACE to restart or ESC to quit</div>' +
+                    '<div id="snake-go-hint">SPACE to restart // ESC to quit</div>' +
                 '</div>' +
             '</div>';
-
         document.body.appendChild(overlay);
 
         var canvas = document.getElementById('snake-canvas');
         var ctx = canvas.getContext('2d');
 
+        var labels = ['IG', 'PA', 'GH', 'YT'];
+        var CELL = 30;
+        var COLS, ROWS;
+
+        // Game state
+        var snake, dir, nextDir, food, score, gameOver, interval, speed;
+
         function resize() {
-            var size = Math.min(window.innerWidth - 40, window.innerHeight - 100, 600);
-            CELL = Math.floor(size / COLS);
-            canvas.width = COLS * CELL;
-            canvas.height = ROWS * CELL;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            COLS = Math.floor(canvas.width / CELL);
+            ROWS = Math.floor(canvas.height / CELL);
         }
-        resize();
-        window.addEventListener('resize', resize);
 
         function isDark() {
             return document.body.classList.contains('dark');
@@ -118,12 +103,11 @@
         function draw() {
             var dark = isDark();
 
-            // Background
-            ctx.fillStyle = dark ? '#050505' : '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Clear — transparent so website shows through
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Grid lines
-            ctx.strokeStyle = dark ? '#1a1a1a' : '#f0f0f0';
+            // Subtle grid overlay
+            ctx.strokeStyle = dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)';
             ctx.lineWidth = 0.5;
             for (var gx = 0; gx <= COLS; gx++) {
                 ctx.beginPath();
@@ -138,42 +122,31 @@
                 ctx.stroke();
             }
 
-            // Snake body — styled as social-link blocks
+            // Snake segments — social-link style blocks
             for (var i = 0; i < snake.length; i++) {
                 var seg = snake[i];
-                var isHead = (i === 0);
+                var px = seg.x * CELL;
+                var py = seg.y * CELL;
 
-                if (dark) {
-                    ctx.fillStyle = isHead ? '#ffffff' : '#ffffff';
-                    ctx.strokeStyle = '#333333';
-                } else {
-                    ctx.fillStyle = isHead ? '#000000' : '#000000';
-                    ctx.strokeStyle = '#cccccc';
-                }
+                // Block fill
+                ctx.fillStyle = dark ? '#ffffff' : '#000000';
+                ctx.fillRect(px + 1, py + 1, CELL - 2, CELL - 2);
 
-                ctx.fillRect(seg.x * CELL + 1, seg.y * CELL + 1, CELL - 2, CELL - 2);
-                ctx.strokeRect(seg.x * CELL + 1, seg.y * CELL + 1, CELL - 2, CELL - 2);
-
-                // Label text inside each block
+                // Label
                 var label = labels[i % labels.length];
                 ctx.fillStyle = dark ? '#000000' : '#ffffff';
                 ctx.font = 'bold ' + Math.floor(CELL * 0.4) + 'px Monaco, Menlo, monospace';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(label, seg.x * CELL + CELL / 2, seg.y * CELL + CELL / 2);
+                ctx.fillText(label, px + CELL / 2, py + CELL / 2);
             }
 
             // Food — @ symbol
             ctx.fillStyle = dark ? '#ffffff' : '#000000';
-            ctx.font = 'bold ' + Math.floor(CELL * 0.7) + 'px Monaco, Menlo, monospace';
+            ctx.font = 'bold ' + Math.floor(CELL * 0.75) + 'px Monaco, Menlo, monospace';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('@', food.x * CELL + CELL / 2, food.y * CELL + CELL / 2);
-
-            // Border
-            ctx.strokeStyle = dark ? '#444444' : '#000000';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(0, 0, canvas.width, canvas.height);
         }
 
         function tick() {
@@ -200,12 +173,10 @@
 
             snake.unshift(head);
 
-            // Eat food
             if (head.x === food.x && head.y === food.y) {
                 score++;
                 document.getElementById('snake-score').textContent = 'SCORE: ' + score;
                 placeFood();
-                // Speed up slightly
                 if (speed > 60) {
                     speed -= 2;
                     clearInterval(interval);
@@ -225,10 +196,19 @@
             document.getElementById('snake-go-score').textContent = 'SCORE: ' + score;
         }
 
-        function resetGame() {
-            snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}, {x: 7, y: 10}];
+        function initGame() {
+            resize();
+            var startX = Math.floor(COLS / 2);
+            var startY = Math.floor(ROWS / 2);
+            snake = [
+                {x: startX, y: startY},
+                {x: startX - 1, y: startY},
+                {x: startX - 2, y: startY},
+                {x: startX - 3, y: startY}
+            ];
             dir = {x: 1, y: 0};
             nextDir = {x: 1, y: 0};
+            food = {x: 0, y: 0};
             score = 0;
             speed = 130;
             gameOver = false;
@@ -236,16 +216,24 @@
             document.getElementById('snake-gameover').style.display = 'none';
             placeFood();
             draw();
+            clearInterval(interval);
             interval = setInterval(tick, speed);
         }
 
         function quit() {
             gameActive = false;
             clearInterval(interval);
-            window.removeEventListener('resize', resize);
+            window.removeEventListener('resize', onResize);
             overlay.remove();
+            document.body.style.overflow = '';
             if (sidebar) sidebar.style.display = '';
         }
+
+        function onResize() {
+            resize();
+            draw();
+        }
+        window.addEventListener('resize', onResize);
 
         // Controls
         document.addEventListener('keydown', function handler(e) {
@@ -262,11 +250,10 @@
 
             if (e.key === ' ' && gameOver) {
                 e.preventDefault();
-                resetGame();
+                initGame();
                 return;
             }
 
-            // Prevent reversing direction
             if ((e.key === 'ArrowUp' || e.key === 'w') && dir.y !== 1) {
                 nextDir = {x: 0, y: -1};
             } else if ((e.key === 'ArrowDown' || e.key === 's') && dir.y !== -1) {
@@ -280,9 +267,6 @@
             e.preventDefault();
         });
 
-        // Start
-        placeFood();
-        draw();
-        interval = setInterval(tick, speed);
+        initGame();
     }
 })();

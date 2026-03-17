@@ -379,25 +379,19 @@ body.dark .yt-channel-card:hover .yt-sub {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
     z-index: 9998;
-    background: rgba(0, 0, 0, 0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.snake-warning-box {
-    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-    font-size: 1rem;
-    color: #ffffff;
+    padding: 0.4rem 0;
     text-align: center;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.65rem;
     text-transform: uppercase;
     letter-spacing: 2px;
-    line-height: 2;
-    border: 2px solid #ffffff;
-    padding: 2rem 3rem;
-    background: #000000;
+    color: #888888;
+    background: transparent;
+}
+
+body.dark #snake-warning {
+    color: #555555;
 }
 
 #snake-overlay {
@@ -407,28 +401,24 @@ body.dark .yt-channel-card:hover .yt-sub {
     width: 100%;
     height: 100%;
     z-index: 9999;
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-body.dark #snake-overlay {
-    background: #050505;
+    background: transparent;
 }
 
 #snake-hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    max-width: 620px;
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
     font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #000000;
+    z-index: 10001;
+    pointer-events: none;
 }
 
 body.dark #snake-hud {
@@ -436,34 +426,34 @@ body.dark #snake-hud {
 }
 
 #snake-canvas {
-    display: block;
-    border: 2px solid #000000;
-}
-
-body.dark #snake-canvas {
-    border-color: #444444;
-}
-
-#snake-gameover {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    display: block;
+}
+
+#snake-gameover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
+    z-index: 10002;
 }
 
 .snake-go-box {
     text-align: center;
     font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
     color: #ffffff;
-    border: 2px solid #ffffff;
+    border: 1px solid #ffffff;
     padding: 2rem 3rem;
-    background: #000000;
+    background: rgba(0, 0, 0, 0.9);
 }
 
 #snake-go-text {
@@ -480,7 +470,7 @@ body.dark #snake-canvas {
 }
 
 #snake-go-hint {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     color: #888888;
     text-transform: uppercase;
     letter-spacing: 1px;
