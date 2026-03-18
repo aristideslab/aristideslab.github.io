@@ -111,10 +111,13 @@
             }
 
             // Food
-            ctx.fillStyle = '#000000';
             ctx.font = 'bold ' + Math.floor(CELL * 0.8) + 'px Monaco,Menlo,monospace';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.strokeText('@', food.x * CELL + CELL / 2, food.y * CELL + CELL / 2);
+            ctx.fillStyle = '#000000';
             ctx.fillText('@', food.x * CELL + CELL / 2, food.y * CELL + CELL / 2);
         }
 
