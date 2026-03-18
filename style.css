@@ -52,41 +52,6 @@ p {
 }
 
 /* ==========================================
-   SOCIAL SIDEBAR
-   ========================================== */
-.social-sidebar {
-    position: fixed;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: #000000;
-    color: #ffffff;
-    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-    font-size: 0.6rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border-bottom: 1px solid #333333;
-}
-
-.social-link:hover {
-    background: #333333;
-    color: #ffffff;
-}
-
-/* ==========================================
    LAYOUT — full width, edge to edge
    ========================================== */
 .content {
@@ -154,10 +119,19 @@ p {
     display: flex;
     flex-wrap: wrap;
     gap: 1.5rem;
+    align-items: stretch;
 }
 
 .embed-item {
-    flex: 0 0 auto;
+    flex: 0 0 326px;
+    max-width: 326px;
+}
+
+.embed-item iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 560px;
+    border: none;
 }
 
 /* ==========================================
@@ -172,7 +146,8 @@ p {
     border: 1px solid #dddddd;
     text-decoration: none;
     color: #000000;
-    max-width: 500px;
+    min-width: 220px;
+    flex-shrink: 0;
 }
 
 .yt-channel-card:hover {
@@ -204,78 +179,6 @@ p {
 }
 
 .yt-sub {
-    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-    font-size: 0.7rem;
-    color: #888888;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 0.25rem;
-}
-
-/* ==========================================
-   BIG BUTTONS — horizontally scrollable
-   ========================================== */
-.big-buttons-scroll {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
-    -webkit-overflow-scrolling: touch;
-}
-
-.big-buttons-scroll::-webkit-scrollbar {
-    height: 4px;
-}
-
-.big-buttons-scroll::-webkit-scrollbar-thumb {
-    background: #cccccc;
-    border-radius: 2px;
-}
-
-.big-button {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 2rem;
-    background: #f5f5f5;
-    border: 1px solid #dddddd;
-    text-decoration: none;
-    color: #000000;
-    min-width: 220px;
-    flex-shrink: 0;
-}
-
-.big-button:hover {
-    background: #000000;
-    color: #ffffff;
-    border-color: #000000;
-}
-
-.big-button:hover .big-button-sub {
-    color: #aaaaaa;
-}
-
-.big-button-icon {
-    font-size: 1.5rem;
-    font-weight: bold;
-    line-height: 1;
-    flex-shrink: 0;
-    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-}
-
-.big-button-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.big-button-label {
-    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-    font-size: 1rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.big-button-sub {
     font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
     font-size: 0.7rem;
     color: #888888;
@@ -345,17 +248,6 @@ body.dark .theme-toggle {
     border-color: #ffffff;
 }
 
-body.dark .social-link {
-    background: #ffffff;
-    color: #000000;
-    border-bottom-color: #cccccc;
-}
-
-body.dark .social-link:hover {
-    background: #cccccc;
-    color: #000000;
-}
-
 body.dark .block {
     background-color: #0a0a0a;
     border-color: #222222;
@@ -408,26 +300,6 @@ body.dark .yt-channel-card:hover {
 
 body.dark .yt-channel-card:hover .yt-sub {
     color: #555555;
-}
-
-body.dark .big-button {
-    background: #111111;
-    border-color: #333333;
-    color: #ffffff;
-}
-
-body.dark .big-button:hover {
-    background: #ffffff;
-    color: #000000;
-    border-color: #ffffff;
-}
-
-body.dark .big-button:hover .big-button-sub {
-    color: #555555;
-}
-
-body.dark .big-buttons-scroll::-webkit-scrollbar-thumb {
-    background: #333333;
 }
 
 body.dark .tools-list {
