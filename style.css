@@ -99,6 +99,7 @@ p {
    ========================================== */
 .content {
     margin: 0;
+    margin-left: 40px;
     padding: 0;
 }
 
@@ -228,6 +229,66 @@ p {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: 0.25rem;
+}
+
+/* ==========================================
+   APP CARDS
+   ========================================== */
+.app-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: #f5f5f5;
+    border: 1px solid #dddddd;
+    text-decoration: none;
+    color: #000000;
+    min-width: 280px;
+    max-width: 340px;
+    flex-shrink: 0;
+}
+
+.app-card:hover {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
+}
+
+.app-card:hover .app-desc {
+    color: #aaaaaa;
+}
+
+.app-card:hover .app-icon {
+    filter: grayscale(100%) invert(1);
+}
+
+.app-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    flex-shrink: 0;
+    filter: grayscale(100%);
+}
+
+.app-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-name {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.app-desc {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.65rem;
+    color: #888888;
+    letter-spacing: 0.5px;
+    margin-top: 0.4rem;
+    line-height: 1.5;
 }
 
 /* ==========================================
@@ -362,6 +423,30 @@ body.dark .yt-channel-card:hover .yt-sub {
 
 body.dark .tools-list {
     color: #999999;
+}
+
+body.dark .app-card {
+    background: #111111;
+    border-color: #333333;
+    color: #ffffff;
+}
+
+body.dark .app-card:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
+
+body.dark .app-card:hover .app-desc {
+    color: #555555;
+}
+
+body.dark .app-card:hover .app-icon {
+    filter: grayscale(100%);
+}
+
+body.dark .app-icon {
+    filter: grayscale(100%) brightness(0.8);
 }
 
 /* ==========================================
