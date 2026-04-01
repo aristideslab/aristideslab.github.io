@@ -1,0 +1,7 @@
+# robots.txt for aristidesai.github.io
+# ComfyUI Artist | AI Workflows | Visual Design | Commissions
+
+User-agent: *
+Allow: /
+
+Sitemap: https://aristidesai.github.io/sitemap.xml
