@@ -157,17 +157,21 @@ p {
 }
 
 /* ==========================================
-   EMBED GRID — side by side, normal size
+   EMBED GRID — always one row, horizontal scroll
    ========================================== */
 .embed-stack {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 1.5rem;
     align-items: stretch;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
 }
 
 .embed-item {
-    flex: 0 0 326px;
+    flex: 1 1 0%;
+    min-width: 200px;
     max-width: 326px;
 }
 
@@ -176,6 +180,13 @@ p {
     height: 100%;
     min-height: 560px;
     border: none;
+}
+
+/* Override Instagram embed inline min-width so items can shrink */
+.embed-item .instagram-media {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
 }
 
 /* ==========================================
@@ -817,14 +828,11 @@ body.dark .form-success p {
     }
 
     .embed-stack {
-        flex-direction: column;
         gap: 1rem;
     }
 
     .embed-item {
-        flex: 0 0 auto;
-        max-width: 100%;
-        min-width: 0;
+        min-width: 180px;
     }
 
     .embed-item iframe {
