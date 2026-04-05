@@ -164,6 +164,107 @@
         </div>
     </section>
 
+    <!-- CONTACT -->
+    <section id="contact" class="block">
+        <div class="block-header">
+            <h2><b>Get in Touch</b></h2>
+        </div>
+        <div class="block-content">
+            <p class="section-desc">Interested in a commission, collaboration, or just want to say hello? Fill out the form below and I'll get back to you.</p>
+            <form action="https://formsubmit.co/aristideslintzeris@gmail.com" method="POST" class="contact-form">
+                <input type="hidden" name="_subject" value="New inquiry from aristidesai.github.io">
+                <input type="hidden" name="_captcha" value="true">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_next" value="https://aristidesai.github.io/?submitted=true">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name *</label>
+                        <input type="text" name="name" id="name" required placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" name="email" id="email" required placeholder="you@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="company">Company / Organization</label>
+                        <input type="text" name="company" id="company" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label for="budget">Budget Range</label>
+                        <select name="budget" id="budget">
+                            <option value="" disabled selected>Select range</option>
+                            <option value="Under $500">Under $500</option>
+                            <option value="$500 - $1,000">$500 - $1,000</option>
+                            <option value="$1,000 - $5,000">$1,000 - $5,000</option>
+                            <option value="$5,000 - $10,000">$5,000 - $10,000</option>
+                            <option value="$10,000+">$10,000+</option>
+                            <option value="Let's discuss">Let's discuss</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reason">Reason for Contact *</label>
+                    <select name="reason" id="reason" required>
+                        <option value="" disabled selected>What can I help with?</option>
+                        <option value="Commission - AI Art / ComfyUI">Commission - AI Art / ComfyUI</option>
+                        <option value="Commission - TouchDesigner">Commission - TouchDesigner</option>
+                        <option value="Commission - Live Visuals / VJ">Commission - Live Visuals / VJ</option>
+                        <option value="Commission - 3D / Blender / CLO3D">Commission - 3D / Blender / CLO3D</option>
+                        <option value="Custom AI Workflow Development">Custom AI Workflow Development</option>
+                        <option value="Brand / Agency Collaboration">Brand / Agency Collaboration</option>
+                        <option value="Consulting / Strategy">Consulting / Strategy</option>
+                        <option value="Workshop / Speaking">Workshop / Speaking</option>
+                        <option value="iOS App Inquiry">iOS App Inquiry</option>
+                        <option value="General Question">General Question</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="timeline">Project Timeline</label>
+                    <select name="timeline" id="timeline">
+                        <option value="" disabled selected>When do you need this?</option>
+                        <option value="ASAP / Rush">ASAP / Rush</option>
+                        <option value="1-2 weeks">1-2 weeks</option>
+                        <option value="1 month">1 month</option>
+                        <option value="2-3 months">2-3 months</option>
+                        <option value="Flexible / Ongoing">Flexible / Ongoing</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Project Details *</label>
+                    <textarea name="message" id="message" rows="5" required placeholder="Tell me about your project — what you're looking for, any references or inspiration, and anything else that would help me understand your vision."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="referral">How did you find me?</label>
+                    <select name="referral" id="referral">
+                        <option value="" disabled selected>Select one</option>
+                        <option value="Google Search">Google Search</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="YouTube">YouTube</option>
+                        <option value="GitHub">GitHub</option>
+                        <option value="Patreon">Patreon</option>
+                        <option value="Word of Mouth">Word of Mouth</option>
+                        <option value="AI Search (ChatGPT, Perplexity, etc.)">AI Search (ChatGPT, Perplexity, etc.)</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="form-submit">Send Message</button>
+            </form>
+            <div id="form-success" class="form-success" style="display:none;">
+                <p>Thanks for reaching out! I'll get back to you soon.</p>
+            </div>
+        </div>
+    </section>
+
 </main>
 
 <script async src="//www.instagram.com/embed.js"></script>
@@ -181,6 +282,18 @@
         toggle.textContent = isDark ? 'light' : 'dark';
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
+
+    // Show success message if redirected back after form submit
+    if (new URLSearchParams(window.location.search).has('submitted')) {
+        var form = document.querySelector('.contact-form');
+        var success = document.getElementById('form-success');
+        if (form && success) {
+            form.style.display = 'none';
+            success.style.display = 'block';
+        }
+        history.replaceState(null, '', window.location.pathname);
+        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+    }
 
     // Guide toggle
     (function() {

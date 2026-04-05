@@ -637,6 +637,127 @@ body.dark .guide-content hr {
 }
 
 /* ==========================================
+   CONTACT FORM
+   ========================================== */
+.contact-form {
+    max-width: 640px;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #555555;
+    margin-bottom: 0.4rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.8rem;
+    background: #f5f5f5;
+    border: 1px solid #dddddd;
+    color: #000000;
+    outline: none;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #000000;
+    background: #ffffff;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+.form-submit {
+    display: inline-block;
+    padding: 0.7rem 2rem;
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #000000;
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+}
+
+.form-submit:hover {
+    background: #333333;
+    border-color: #333333;
+}
+
+.form-success p {
+    font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #000000;
+    padding: 1.5rem 0;
+}
+
+/* Contact form dark mode */
+body.dark .form-group label {
+    color: #888888;
+}
+
+body.dark .form-group input,
+body.dark .form-group select,
+body.dark .form-group textarea {
+    background: #111111;
+    border-color: #333333;
+    color: #cccccc;
+}
+
+body.dark .form-group input:focus,
+body.dark .form-group select:focus,
+body.dark .form-group textarea:focus {
+    border-color: #ffffff;
+    background: #0a0a0a;
+}
+
+body.dark .form-submit {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
+
+body.dark .form-submit:hover {
+    background: #cccccc;
+    border-color: #cccccc;
+}
+
+body.dark .form-success p {
+    color: #cccccc;
+}
+
+/* ==========================================
    RESPONSIVE
    ========================================== */
 @media (max-width: 768px) {
@@ -783,6 +904,27 @@ body.dark .guide-content hr {
         font-size: 0.6rem;
         display: block;
         overflow-x: auto;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form-group label {
+        font-size: 0.6rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 0.7rem;
+        padding: 0.5rem 0.6rem;
+    }
+
+    .form-submit {
+        width: 100%;
+        text-align: center;
     }
 
     /* Bottom bar spacer */
