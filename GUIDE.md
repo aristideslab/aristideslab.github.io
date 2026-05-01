@@ -475,8 +475,4 @@ Currently the source name is fixed as "TDLidar." This makes it easy to find in a
 
 ## Need Help?
 
-If you run into issues not covered here, check the GitHub repository for updates and known issues:
-
-https://github.com/aristideslintzeris/TDLidar
-
-You can also open an issue on GitHub with a description of your problem, your iPhone model, and your TouchDesigner version.
+If you run into issues not covered here, please reach to mailto:aristideslintzeris@icloud.com with your phone model, touchdesigner client version and operating system. 

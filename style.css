@@ -29,6 +29,25 @@ p {
 }
 
 /* ==========================================
+   PARTICLE BACKGROUND (desktop only)
+   ========================================== */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    #particle-canvas {
+        display: none;
+    }
+}
+
+/* ==========================================
    THEME TOGGLE
    ========================================== */
 .theme-toggle {
@@ -156,6 +175,40 @@ p {
     font-weight: normal;
     font-size: 0.95rem;
     max-width: 700px;
+}
+
+.about-flex {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.about-flex p {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.about-qr-link {
+    flex-shrink: 0;
+    display: block;
+    line-height: 0;
+}
+
+.about-qr {
+    width: 160px;
+    height: 160px;
+    display: block;
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    transition: opacity 0.2s ease;
+}
+
+.about-qr:hover {
+    opacity: 0.85;
+}
+
+body.dark .about-qr {
+    border-color: #333333;
 }
 
 .section-desc {
@@ -843,6 +896,16 @@ body.dark .form-success p {
 
     .about-content p {
         font-size: 0.75rem;
+    }
+
+    .about-flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .about-qr {
+        width: 130px;
+        height: 130px;
     }
 
     .section-desc {

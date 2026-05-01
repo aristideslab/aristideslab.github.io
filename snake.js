@@ -68,7 +68,7 @@
         document.body.appendChild(goScreen);
 
         var ctx = canvas.getContext('2d');
-        var labels = ['IG', 'PA', 'GH', 'YT'];
+        var labels = ['IG', 'PA', 'GH', 'YT', 'TD', '☕'];
         var CELL = 28;
         var COLS, ROWS;
         var snake, dir, nextDir, food, score, gameOver, interval, speed;
@@ -107,7 +107,7 @@
                 ctx.font = 'bold ' + Math.floor(CELL * 0.4) + 'px Monaco,Menlo,monospace';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(labels[i % 4], s.x * CELL + CELL / 2, s.y * CELL + CELL / 2);
+                ctx.fillText(labels[i % labels.length], s.x * CELL + CELL / 2, s.y * CELL + CELL / 2);
             }
 
             // Food
