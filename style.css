@@ -37,7 +37,7 @@ p {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 50;
+    z-index: 1;
     pointer-events: none;
 }
 
@@ -137,13 +137,15 @@ p {
     margin: 0;
     margin-left: 40px;
     padding: 0;
+    position: relative;
+    z-index: 2;
 }
 
 /* ==========================================
    CONTENT BLOCKS — edge to edge
    ========================================== */
 .block {
-    background-color: #ffffff;
+    background-color: transparent;
     border-bottom: 1px solid #dddddd;
     margin: 0;
 }
@@ -454,7 +456,7 @@ body.dark .donate-btn {
 }
 
 body.dark .block {
-    background-color: #0a0a0a;
+    background-color: transparent;
     border-color: #222222;
 }
 
