@@ -7,14 +7,21 @@
     document.body.appendChild(canvas);
 
     var ctx = canvas.getContext('2d');
-    var particles = [];
     var mouse = { x: -9999, y: -9999, active: false };
     var W, H;
     var rafId;
 
-    var TYPE_DRIFT = 0;
+    var lastScrollY = window.scrollY;
+    var scrollDelta = 0;
+
+    // === Simple drift particles in typed arrays ===
+    var SIMPLE_COUNT = 0;
+    var sx, sy, svx, svy, sph, sspd, sr;
+
+    // === Special behavior particles ===
     var TYPE_FOLLOWER = 1;
     var TYPE_ORBITER = 2;
+    var special = [];
 
     function resize() {
         W = canvas.width = window.innerWidth;
@@ -29,195 +36,235 @@
 
     function init() {
         resize();
-        var count = Math.min(1400, Math.floor((W * H) / 1600));
-        particles = [];
 
-        for (var i = 0; i < count; i++) {
-            var roll = Math.random();
-            var type;
-            if (roll < 0.55) type = TYPE_DRIFT;
-            else if (roll < 0.85) type = TYPE_FOLLOWER;
-            else type = TYPE_ORBITER;
+        SIMPLE_COUNT = Math.min(20000, Math.floor((W * H) / 110));
+        sx = new Float32Array(SIMPLE_COUNT);
+        sy = new Float32Array(SIMPLE_COUNT);
+        svx = new Float32Array(SIMPLE_COUNT);
+        svy = new Float32Array(SIMPLE_COUNT);
+        sph = new Float32Array(SIMPLE_COUNT);
+        sspd = new Float32Array(SIMPLE_COUNT);
+        sr = new Float32Array(SIMPLE_COUNT);
 
-            particles.push({
+        for (var i = 0; i < SIMPLE_COUNT; i++) {
+            sx[i] = Math.random() * W;
+            sy[i] = Math.random() * H;
+            svx[i] = (Math.random() - 0.5) * 0.25;
+            svy[i] = (Math.random() - 0.5) * 0.25;
+            sph[i] = Math.random() * Math.PI * 2;
+            sspd[i] = 0.004 + Math.random() * 0.012;
+            sr[i] = Math.random() < 0.85 ? 0.6 : 1.1;
+        }
+
+        // Special particles
+        var followerCount = 220;
+        var orbiterPairCount = 60;
+        special = [];
+
+        for (var f = 0; f < followerCount; f++) {
+            special.push({
+                type: TYPE_FOLLOWER,
                 x: Math.random() * W,
                 y: Math.random() * H,
-                vx: (Math.random() - 0.5) * 0.25,
-                vy: (Math.random() - 0.5) * 0.25,
-                r: Math.random() * 1.4 + 0.4,
+                vx: 0,
+                vy: 0,
+                r: 1.4,
                 phase: Math.random() * Math.PI * 2,
                 speed: 0.005 + Math.random() * 0.01,
-                type: type,
-                target: -1,
-                partner: -1,
-                orbitAngle: Math.random() * Math.PI * 2,
-                orbitRadius: 14 + Math.random() * 22,
-                orbitSpeed: (Math.random() < 0.5 ? -1 : 1) * (0.02 + Math.random() * 0.04),
-                stateTimer: Math.random() * 600,
-                escaping: false,
-                escapeVx: 0,
-                escapeVy: 0
+                target: -1
             });
         }
 
-        // Build follower chains
-        for (var j = 0; j < particles.length; j++) {
-            if (particles[j].type === TYPE_FOLLOWER) {
-                var t;
-                var tries = 0;
-                do {
-                    t = Math.floor(Math.random() * particles.length);
-                    tries++;
-                } while ((t === j || particles[t].type === TYPE_ORBITER) && tries < 10);
-                particles[j].target = t;
-            }
+        for (var o = 0; o < orbiterPairCount; o++) {
+            var ax = Math.random() * W;
+            var ay = Math.random() * H;
+            var ang = Math.random() * Math.PI * 2;
+            var rad = 14 + Math.random() * 22;
+            var spd = (Math.random() < 0.5 ? -1 : 1) * (0.02 + Math.random() * 0.04);
+            var aIndex = special.length;
+            special.push({
+                type: TYPE_ORBITER, x: ax, y: ay, vx: 0, vy: 0, r: 1.5,
+                partner: aIndex + 1, orbitAngle: ang, orbitRadius: rad,
+                orbitSpeed: spd, stateTimer: 400 + Math.random() * 600,
+                escaping: false, escapeVx: 0, escapeVy: 0, sign: 1
+            });
+            special.push({
+                type: TYPE_ORBITER,
+                x: ax + Math.cos(ang) * rad * 2,
+                y: ay + Math.sin(ang) * rad * 2,
+                vx: 0, vy: 0, r: 1.5,
+                partner: aIndex, orbitAngle: ang, orbitRadius: rad,
+                orbitSpeed: spd, stateTimer: 400 + Math.random() * 600,
+                escaping: false, escapeVx: 0, escapeVy: 0, sign: -1
+            });
         }
 
-        // Pair orbiters
-        var orbiters = [];
-        for (var k = 0; k < particles.length; k++) {
-            if (particles[k].type === TYPE_ORBITER) orbiters.push(k);
-        }
-        for (var m = 0; m < orbiters.length - 1; m += 2) {
-            var a = orbiters[m];
-            var b = orbiters[m + 1];
-            particles[a].partner = b;
-            particles[b].partner = a;
-            // Place near each other initially
-            particles[b].x = particles[a].x + Math.cos(particles[a].orbitAngle) * particles[a].orbitRadius * 2;
-            particles[b].y = particles[a].y + Math.sin(particles[a].orbitAngle) * particles[a].orbitRadius * 2;
+        // Build follower chains — chain follower -> follower -> ... or follower -> simple-target-position
+        for (var ff = 0; ff < followerCount; ff++) {
+            var t;
+            var tries = 0;
+            do {
+                t = Math.floor(Math.random() * special.length);
+                tries++;
+            } while ((t === ff || special[t].type === TYPE_ORBITER) && tries < 8);
+            special[ff].target = t;
         }
     }
 
     function tick() {
+        // Consume scroll delta — push all particles
+        if (scrollDelta !== 0) {
+            var sd = scrollDelta;
+            scrollDelta = 0;
+            for (var s0 = 0; s0 < SIMPLE_COUNT; s0++) sy[s0] += sd;
+            for (var sp0 = 0; sp0 < special.length; sp0++) special[sp0].y += sd;
+        }
+
         ctx.clearRect(0, 0, W, H);
         var isDark = document.body.classList.contains('dark');
-        var fillBase = isDark ? 'rgba(255,255,255,' : 'rgba(0,0,0,';
-        var lineBase = isDark ? 'rgba(255,255,255,' : 'rgba(0,0,0,';
+        var dotColor = isDark ? 'rgba(255,255,255,0.42)' : 'rgba(0,0,0,0.38)';
+        var lineColor = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.10)';
 
-        // Draw connection lines for follower chains first (behind dots)
+        var hasMouse = mouse.active;
+        var mx = mouse.x, my = mouse.y;
+        var radius2 = 130 * 130;
+
+        // === Update + render simple particles in two passes ===
+        // Pass 1: update positions
+        for (var i = 0; i < SIMPLE_COUNT; i++) {
+            sph[i] += sspd[i];
+            sx[i] += svx[i] + Math.sin(sph[i]) * 0.16;
+            sy[i] += svy[i] + Math.cos(sph[i] * 0.7) * 0.12;
+            svx[i] *= 0.95;
+            svy[i] *= 0.95;
+
+            if (hasMouse) {
+                var ddx = sx[i] - mx;
+                var ddy = sy[i] - my;
+                var d2 = ddx * ddx + ddy * ddy;
+                if (d2 < radius2 && d2 > 1) {
+                    var d = Math.sqrt(d2);
+                    var f = (1 - d / 130) * 1.2;
+                    sx[i] += (ddx / d) * f;
+                    sy[i] += (ddy / d) * f;
+                    svx[i] += (ddx / d) * f * 0.3;
+                    svy[i] += (ddy / d) * f * 0.3;
+                }
+            }
+
+            if (sx[i] < 0) sx[i] += W;
+            else if (sx[i] >= W) sx[i] -= W;
+            if (sy[i] < 0) sy[i] += H;
+            else if (sy[i] >= H) sy[i] -= H;
+        }
+
+        // Pass 2: draw all simple particles in a single path
+        ctx.fillStyle = dotColor;
+        ctx.beginPath();
+        for (var j = 0; j < SIMPLE_COUNT; j++) {
+            var rj = sr[j];
+            ctx.moveTo(sx[j] + rj, sy[j]);
+            ctx.arc(sx[j], sy[j], rj, 0, Math.PI * 2);
+        }
+        ctx.fill();
+
+        // === Special particles ===
+        // Draw follower chain lines first
+        ctx.strokeStyle = lineColor;
         ctx.lineWidth = 0.5;
-        for (var i = 0; i < particles.length; i++) {
-            var p = particles[i];
-            if (p.type === TYPE_FOLLOWER && p.target >= 0) {
-                var t = particles[p.target];
-                var ddx = wrapDelta(t.x - p.x, W);
-                var ddy = wrapDelta(t.y - p.y, H);
-                if (ddx * ddx + ddy * ddy < 200 * 200) {
-                    ctx.strokeStyle = lineBase + '0.12)';
-                    ctx.beginPath();
-                    ctx.moveTo(p.x, p.y);
-                    ctx.lineTo(p.x + ddx, p.y + ddy);
-                    ctx.stroke();
+        ctx.beginPath();
+        for (var ll = 0; ll < special.length; ll++) {
+            var lp = special[ll];
+            if (lp.type === TYPE_FOLLOWER && lp.target >= 0) {
+                var lt = special[lp.target];
+                var ldx = wrapDelta(lt.x - lp.x, W);
+                var ldy = wrapDelta(lt.y - lp.y, H);
+                if (ldx * ldx + ldy * ldy < 200 * 200) {
+                    ctx.moveTo(lp.x, lp.y);
+                    ctx.lineTo(lp.x + ldx, lp.y + ldy);
                 }
             }
         }
+        ctx.stroke();
 
-        for (var i2 = 0; i2 < particles.length; i2++) {
-            var p2 = particles[i2];
+        // Update + draw special particles
+        ctx.fillStyle = dotColor;
+        ctx.beginPath();
+        for (var k = 0; k < special.length; k++) {
+            var p = special[k];
 
-            if (p2.type === TYPE_DRIFT) {
-                p2.phase += p2.speed;
-                p2.x += p2.vx + Math.sin(p2.phase) * 0.18;
-                p2.y += p2.vy + Math.cos(p2.phase * 0.7) * 0.14;
-                p2.vx *= 0.94;
-                p2.vy *= 0.94;
-            } else if (p2.type === TYPE_FOLLOWER) {
-                p2.phase += p2.speed;
-                if (p2.target >= 0) {
-                    var tg = particles[p2.target];
-                    var dx = wrapDelta(tg.x - p2.x, W);
-                    var dy = wrapDelta(tg.y - p2.y, H);
-                    var d = Math.sqrt(dx * dx + dy * dy);
-                    if (d > 0.1) {
-                        var follow = 0.025;
-                        p2.vx += (dx / d) * follow;
-                        p2.vy += (dy / d) * follow;
+            if (p.type === TYPE_FOLLOWER) {
+                p.phase += p.speed;
+                if (p.target >= 0) {
+                    var tg = special[p.target];
+                    var tdx = wrapDelta(tg.x - p.x, W);
+                    var tdy = wrapDelta(tg.y - p.y, H);
+                    var td = Math.sqrt(tdx * tdx + tdy * tdy);
+                    if (td > 0.1) {
+                        p.vx += (tdx / td) * 0.025;
+                        p.vy += (tdy / td) * 0.025;
                     }
                 }
-                p2.vx += Math.sin(p2.phase) * 0.02;
-                p2.vy += Math.cos(p2.phase * 0.8) * 0.02;
-                p2.x += p2.vx;
-                p2.y += p2.vy;
-                p2.vx *= 0.92;
-                p2.vy *= 0.92;
-            } else if (p2.type === TYPE_ORBITER) {
-                p2.stateTimer--;
-
-                if (p2.escaping) {
-                    p2.x += p2.escapeVx;
-                    p2.y += p2.escapeVy;
-                    p2.escapeVx *= 0.985;
-                    p2.escapeVy *= 0.985;
-                    if (p2.stateTimer <= 0) {
-                        p2.escaping = false;
-                        p2.stateTimer = 400 + Math.random() * 600;
-                        p2.vx = p2.escapeVx;
-                        p2.vy = p2.escapeVy;
+                p.vx += Math.sin(p.phase) * 0.015;
+                p.vy += Math.cos(p.phase * 0.8) * 0.015;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vx *= 0.92;
+                p.vy *= 0.92;
+            } else if (p.type === TYPE_ORBITER) {
+                p.stateTimer--;
+                if (p.escaping) {
+                    p.x += p.escapeVx;
+                    p.y += p.escapeVy;
+                    p.escapeVx *= 0.985;
+                    p.escapeVy *= 0.985;
+                    if (p.stateTimer <= 0) {
+                        p.escaping = false;
+                        p.stateTimer = 400 + Math.random() * 600;
                     }
-                } else if (p2.partner >= 0) {
-                    var pa = particles[p2.partner];
-                    // Orbit around midpoint
-                    var midX = p2.x + wrapDelta(pa.x - p2.x, W) / 2;
-                    var midY = p2.y + wrapDelta(pa.y - p2.y, H) / 2;
-                    p2.orbitAngle += p2.orbitSpeed;
-                    var sign = (i2 < p2.partner) ? 1 : -1;
-                    var targetX = midX + Math.cos(p2.orbitAngle) * p2.orbitRadius * sign;
-                    var targetY = midY + Math.sin(p2.orbitAngle) * p2.orbitRadius * sign;
-                    p2.x += (targetX - p2.x) * 0.25;
-                    p2.y += (targetY - p2.y) * 0.25;
-
-                    if (p2.stateTimer <= 0) {
-                        // Run away
-                        p2.escaping = true;
-                        p2.stateTimer = 200 + Math.random() * 300;
-                        var ang = p2.orbitAngle + Math.PI / 2 * sign;
-                        var spd = 1.5 + Math.random() * 2;
-                        p2.escapeVx = Math.cos(ang) * spd;
-                        p2.escapeVy = Math.sin(ang) * spd;
+                } else if (p.partner >= 0) {
+                    var pa = special[p.partner];
+                    var midX = p.x + wrapDelta(pa.x - p.x, W) / 2;
+                    var midY = p.y + wrapDelta(pa.y - p.y, H) / 2;
+                    p.orbitAngle += p.orbitSpeed;
+                    var tx = midX + Math.cos(p.orbitAngle) * p.orbitRadius * p.sign;
+                    var ty = midY + Math.sin(p.orbitAngle) * p.orbitRadius * p.sign;
+                    p.x += (tx - p.x) * 0.25;
+                    p.y += (ty - p.y) * 0.25;
+                    if (p.stateTimer <= 0) {
+                        p.escaping = true;
+                        p.stateTimer = 200 + Math.random() * 300;
+                        var ang2 = p.orbitAngle + Math.PI / 2 * p.sign;
+                        var spd2 = 1.5 + Math.random() * 2;
+                        p.escapeVx = Math.cos(ang2) * spd2;
+                        p.escapeVy = Math.sin(ang2) * spd2;
                     }
-                } else {
-                    p2.x += p2.vx;
-                    p2.y += p2.vy;
-                    p2.vx *= 0.96;
-                    p2.vy *= 0.96;
                 }
             }
 
-            // Mouse displacement (all types)
-            if (mouse.active) {
-                var mdx = p2.x - mouse.x;
-                var mdy = p2.y - mouse.y;
-                var dist2 = mdx * mdx + mdy * mdy;
-                var radius = 130;
-                if (dist2 < radius * radius && dist2 > 0.5) {
-                    var dist = Math.sqrt(dist2);
-                    var force = (1 - dist / radius) * 1.6;
-                    p2.x += (mdx / dist) * force;
-                    p2.y += (mdy / dist) * force;
-                    p2.vx += (mdx / dist) * force * 0.4;
-                    p2.vy += (mdy / dist) * force * 0.4;
+            if (hasMouse) {
+                var mdx = p.x - mx;
+                var mdy = p.y - my;
+                var md2 = mdx * mdx + mdy * mdy;
+                if (md2 < radius2 && md2 > 1) {
+                    var md = Math.sqrt(md2);
+                    var mf = (1 - md / 130) * 1.6;
+                    p.x += (mdx / md) * mf;
+                    p.y += (mdy / md) * mf;
+                    p.vx += (mdx / md) * mf * 0.4;
+                    p.vy += (mdy / md) * mf * 0.4;
                 }
             }
 
-            // Cap velocity
-            var maxV = 4;
-            if (p2.vx > maxV) p2.vx = maxV;
-            else if (p2.vx < -maxV) p2.vx = -maxV;
-            if (p2.vy > maxV) p2.vy = maxV;
-            else if (p2.vy < -maxV) p2.vy = -maxV;
+            if (p.x < 0) p.x += W;
+            else if (p.x >= W) p.x -= W;
+            if (p.y < 0) p.y += H;
+            else if (p.y >= H) p.y -= H;
 
-            // Wrap edges
-            if (p2.x < 0) p2.x += W;
-            else if (p2.x >= W) p2.x -= W;
-            if (p2.y < 0) p2.y += H;
-            else if (p2.y >= H) p2.y -= H;
-
-            ctx.fillStyle = fillBase + '0.45)';
-            ctx.beginPath();
-            ctx.arc(p2.x, p2.y, p2.r, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.moveTo(p.x + p.r, p.y);
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         }
+        ctx.fill();
 
         rafId = requestAnimationFrame(tick);
     }
@@ -231,6 +278,12 @@
     document.addEventListener('mouseleave', function() {
         mouse.active = false;
     });
+
+    window.addEventListener('scroll', function() {
+        var ny = window.scrollY;
+        scrollDelta += (ny - lastScrollY);
+        lastScrollY = ny;
+    }, { passive: true });
 
     window.addEventListener('resize', function() {
         if (window.innerWidth <= 768) {
