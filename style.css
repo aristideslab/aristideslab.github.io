@@ -538,11 +538,17 @@ body.dark .app-icon {
 }
 
 /* ==========================================
-   GUIDE TOGGLE & BOX
+   TDLIDAR LINKS
    ========================================== */
-.guide-toggle {
-    display: inline-block;
+.tdlidar-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
     margin-top: 1rem;
+}
+
+.tdlidar-link {
+    display: inline-block;
     padding: 0.5rem 1.2rem;
     background: #f5f5f5;
     border: 1px solid #dddddd;
@@ -550,52 +556,26 @@ body.dark .app-icon {
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    cursor: pointer;
+    text-decoration: none;
     color: #000000;
 }
 
-.guide-toggle:hover {
+.tdlidar-link:hover {
     background: #000000;
     color: #ffffff;
     border-color: #000000;
 }
 
-.guide-toggle.open {
-    background: #000000;
-    color: #ffffff;
-    border-color: #000000;
-}
-
-body.dark .guide-toggle {
+body.dark .tdlidar-link {
     background: #111111;
     border-color: #333333;
     color: #cccccc;
 }
 
-body.dark .guide-toggle:hover,
-body.dark .guide-toggle.open {
+body.dark .tdlidar-link:hover {
     background: #ffffff;
     color: #000000;
     border-color: #ffffff;
-}
-
-.guide-box {
-    display: none;
-    margin-top: 1rem;
-    padding: 2rem;
-    background: #f9f9f9;
-    border: 1px solid #dddddd;
-    max-height: 70vh;
-    overflow-y: auto;
-}
-
-.guide-box.open {
-    display: block;
-}
-
-body.dark .guide-box {
-    background: #0d0d0d;
-    border-color: #333333;
 }
 
 .guide-content {
