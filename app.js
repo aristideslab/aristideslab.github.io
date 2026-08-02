@@ -1,19 +1,16 @@
 /* ==========================================================================
-   ARISTIDES LAB — section state machine, device screens, generative field
+   ARISTIDES LAB — section state machine + the LiDAR field background
    ========================================================================== */
 (function () {
     'use strict';
 
     var SECTIONS = ['index', 'portfolio', 'apps', 'links', 'skills', 'contact'];
-    var SCREEN_CHROME = ['light', 'light', 'light', 'dark', 'dark', 'dark']; // status-bar ink per screen
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    var titles  = Array.prototype.slice.call(document.querySelectorAll('.title'));
-    var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'));
-    var panels  = Array.prototype.slice.call(document.querySelectorAll('.panel'));
-    var dots    = Array.prototype.slice.call(document.querySelectorAll('.dot'));
-    var statusbar = document.getElementById('statusbar');
-    var deviceScreen = document.querySelector('.device__screen');
+    var titles = Array.prototype.slice.call(document.querySelectorAll('.title'));
+    var frames = Array.prototype.slice.call(document.querySelectorAll('.frame'));
+    var panels = Array.prototype.slice.call(document.querySelectorAll('.panel'));
+    var dots   = Array.prototype.slice.call(document.querySelectorAll('.dot'));
 
     var current = -1;
     var locked = false;
@@ -33,11 +30,12 @@
 
         document.body.setAttribute('data-section', String(index));
 
-        [titles, screens, panels].forEach(function (group) {
+        [titles, frames, panels].forEach(function (group) {
             group.forEach(function (el, i) {
                 var on = i === index;
                 el.classList.toggle('is-active', on);
                 setInert(el, !on);
+                if (on) el.scrollTop = 0;
             });
         });
 
@@ -46,11 +44,7 @@
             else d.removeAttribute('aria-current');
         });
 
-        statusbar.setAttribute('data-chrome', SCREEN_CHROME[index]);
-        deviceScreen.setAttribute('data-chrome', SCREEN_CHROME[index]);
-
         if (index === 1) showReel(reelIndex, true);
-        if (index === 0) field.start(); else field.stop();
 
         if (!fromHash) {
             var hash = '#' + SECTIONS[index];
@@ -60,19 +54,18 @@
         }
 
         locked = true;
-        setTimeout(function () { locked = false; }, reduceMotion ? 60 : 620);
+        setTimeout(function () { locked = false; }, reduceMotion ? 60 : 600);
     }
 
     function step(delta) { go(current + delta); }
 
     /* ---------------------------------------------------------------------
-       Should this event scroll inner content instead of paging?
+       Let inner content scroll before paging the section
        --------------------------------------------------------------------- */
     function scrollableAncestor(node, dir) {
         while (node && node !== document.body) {
             if (node.nodeType === 1) {
-                var style = window.getComputedStyle(node);
-                var oy = style.overflowY;
+                var oy = window.getComputedStyle(node).overflowY;
                 if ((oy === 'auto' || oy === 'scroll') && node.scrollHeight > node.clientHeight + 1) {
                     var atTop = node.scrollTop <= 0;
                     var atBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 1;
@@ -92,7 +85,7 @@
 
     window.addEventListener('wheel', function (e) {
         var dir = e.deltaY > 0 ? 1 : -1;
-        if (scrollableAncestor(e.target, dir)) return;   // let the inner screen scroll
+        if (scrollableAncestor(e.target, dir)) return;
         e.preventDefault();
         if (locked) return;
 
@@ -100,10 +93,7 @@
         clearTimeout(wheelReset);
         wheelReset = setTimeout(function () { wheelAccum = 0; }, 160);
 
-        if (Math.abs(wheelAccum) > 42) {
-            wheelAccum = 0;
-            step(dir);
-        }
+        if (Math.abs(wheelAccum) > 42) { wheelAccum = 0; step(dir); }
     }, { passive: false });
 
     /* ---------------------------------------------------------------------
@@ -116,12 +106,12 @@
         if (document.getElementById('snake-canvas')) return;   // snake owns the keyboard
 
         switch (e.key) {
-            case 'ArrowDown': case 'PageDown': case 'j':
-                e.preventDefault(); step(1); break;
-            case 'ArrowUp': case 'PageUp': case 'k':
-                e.preventDefault(); step(-1); break;
+            case 'ArrowDown': case 'PageDown': case 'j': e.preventDefault(); step(1); break;
+            case 'ArrowUp':   case 'PageUp':   case 'k': e.preventDefault(); step(-1); break;
             case 'Home': e.preventDefault(); go(0); break;
             case 'End':  e.preventDefault(); go(SECTIONS.length - 1); break;
+            case 'ArrowLeft':  if (current === 1) { e.preventDefault(); showReel(reelIndex - 1, true); } break;
+            case 'ArrowRight': if (current === 1) { e.preventDefault(); showReel(reelIndex + 1, true); } break;
         }
     });
 
@@ -150,15 +140,22 @@
     window.addEventListener('touchend', function () { touchY = null; }, { passive: true });
 
     /* ---------------------------------------------------------------------
-       Click targets: dots, titles, wordmark, pager, panel buttons
+       Click targets
        --------------------------------------------------------------------- */
     document.addEventListener('click', function (e) {
         if (!e.target || !e.target.closest) return;
+
         var goEl = e.target.closest('[data-goto]');
         if (goEl) { e.preventDefault(); go(parseInt(goEl.getAttribute('data-goto'), 10)); return; }
 
         var stepEl = e.target.closest('[data-step]');
         if (stepEl) { e.preventDefault(); step(parseInt(stepEl.getAttribute('data-step'), 10)); return; }
+
+        if (e.target.closest('[data-reel-next]')) { showReel(reelIndex + 1, true); return; }
+        if (e.target.closest('[data-reel-prev]')) { showReel(reelIndex - 1, true); return; }
+
+        var tick = e.target.closest('[data-reel-go]');
+        if (tick) { showReel(parseInt(tick.getAttribute('data-reel-go'), 10), true); return; }
     });
 
     titles.forEach(function (t, i) {
@@ -169,8 +166,8 @@
        Instagram reels — lazy iframes
        --------------------------------------------------------------------- */
     var reelEls = Array.prototype.slice.call(document.querySelectorAll('.reel'));
+    var reelTicks = Array.prototype.slice.call(document.querySelectorAll('[data-reel-go]'));
     var reelIndex = 0;
-    var reelCounter = document.getElementById('reelIndex');
 
     function loadReel(i) {
         var el = reelEls[i];
@@ -181,61 +178,26 @@
         frame.setAttribute('title', 'Instagram reel by @aristides.lab');
         frame.setAttribute('loading', 'lazy');
         frame.setAttribute('scrolling', 'no');
-        frame.setAttribute('allowtransparency', 'true');
         frame.addEventListener('load', function () { el.classList.add('is-loaded'); });
         el.querySelector('.reel__crop').appendChild(frame);
     }
 
-    // allowLoad stays false until the portfolio section is actually reached,
-    // so four Instagram iframes never load on first paint.
+    // allowLoad stays false until the portfolio section is reached, so no
+    // Instagram iframes are fetched on first paint.
     function showReel(i, allowLoad) {
         reelIndex = (i + reelEls.length) % reelEls.length;
         reelEls.forEach(function (el, n) { el.classList.toggle('is-active', n === reelIndex); });
-        reelCounter.textContent = String(reelIndex + 1);
+        reelTicks.forEach(function (b, n) {
+            if (n === reelIndex) b.setAttribute('aria-current', 'true');
+            else b.removeAttribute('aria-current');
+        });
         if (allowLoad) {
             loadReel(reelIndex);
-            loadReel((reelIndex + 1) % reelEls.length);   // prefetch the next one
+            loadReel((reelIndex + 1) % reelEls.length);   // prefetch the next
         }
     }
 
-    document.addEventListener('click', function (e) {
-        if (!e.target || !e.target.closest) return;
-        if (e.target.closest('[data-reel-next]')) showReel(reelIndex + 1, true);
-        if (e.target.closest('[data-reel-prev]')) showReel(reelIndex - 1, true);
-    });
-
     showReel(0, false);
-
-    /* ---------------------------------------------------------------------
-       Apps — hovering an icon highlights its detail in the right panel
-       --------------------------------------------------------------------- */
-    var appIcons   = Array.prototype.slice.call(document.querySelectorAll('.appicon'));
-    var appDetails = Array.prototype.slice.call(document.querySelectorAll('[data-app-detail]'));
-
-    function focusApp(i) {
-        appDetails.forEach(function (d, n) { d.classList.toggle('is-focused', n === i); });
-    }
-
-    appIcons.forEach(function (icon, i) {
-        icon.addEventListener('mouseenter', function () { focusApp(i); });
-        icon.addEventListener('focus', function () { focusApp(i); });
-    });
-    appDetails.forEach(function (d, i) {
-        d.addEventListener('mouseenter', function () { focusApp(i); });
-    });
-    focusApp(0);
-
-    /* ---------------------------------------------------------------------
-       Live clock in the status bar
-       --------------------------------------------------------------------- */
-    var clock = document.getElementById('clock');
-    function tickClock() {
-        var d = new Date();
-        var h = d.getHours() % 12; if (h === 0) h = 12;
-        clock.textContent = h + ':' + String(d.getMinutes()).padStart(2, '0');
-    }
-    tickClock();
-    setInterval(tickClock, 15000);
 
     /* ---------------------------------------------------------------------
        Theme
@@ -262,153 +224,122 @@
     });
 
     /* ---------------------------------------------------------------------
-       Generative depth field — screen 0
+       LiDAR field — a perspective ground plane of scan rows across the page.
+       Rows bunch toward the horizon and spread toward the viewer; a scan bar
+       travels outward lighting each row it crosses.
        --------------------------------------------------------------------- */
-    var field = (function () {
+    (function field() {
         var canvas = document.getElementById('field');
         var ctx = canvas.getContext('2d');
         var pts = [];
         var raf = null;
-        var w = 0, h = 0, dpr = 1;
-        var t = 0;
-        var pointer = { x: 0.5, y: 0.5, on: false };
+        var w = 0, h = 0, dpr = 1, t = 0;
+        var pointer = { x: 0.5, y: 0.72, on: false };
+
+        var ROWS = 30;
+        var HORIZON = 0.42;
 
         function size() {
-            var r = canvas.getBoundingClientRect();
-            if (!r.width || !r.height) return false;
             dpr = Math.min(window.devicePixelRatio || 1, 2);
-            w = r.width; h = r.height;
+            w = window.innerWidth;
+            h = window.innerHeight;
             canvas.width = Math.round(w * dpr);
             canvas.height = Math.round(h * dpr);
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            return true;
         }
 
-        // A perspective ground plane of scan rows: rows bunch toward the
-        // horizon and spread toward the viewer, so it reads as a LiDAR sweep
-        // over terrain rather than random noise.
-        var ROWS = 34;
-        var HORIZON = 0.30;
-
         function seed() {
-            var perRow = Math.max(20, Math.round(w / 7));
+            var perRow = Math.max(26, Math.round(w / 22));
             pts = [];
             for (var r = 0; r < ROWS; r++) {
-                var k = r / (ROWS - 1);           // 0 = far, 1 = near
-                var near = Math.pow(k, 2.1);      // perspective compression
+                var k = r / (ROWS - 1);          // 0 = far, 1 = near
+                var near = Math.pow(k, 2.3);
                 for (var i = 0; i < perRow; i++) {
                     var u = i / (perRow - 1);
                     pts.push({
-                        u: u,
                         k: k,
                         near: near,
-                        // lateral spread widens as the row approaches the viewer
-                        spread: 0.5 + (u - 0.5) * (0.42 + 1.5 * near),
+                        spread: 0.5 + (u - 0.5) * (0.3 + 2.1 * near),
                         y: HORIZON + (1 - HORIZON) * near,
-                        p: (u * 5.4) + r * 0.55,
-                        j: (Math.random() - 0.5) * 0.5
+                        p: u * 5.2 + r * 0.6
                     });
                 }
             }
         }
 
-        function accent() {
-            return document.body.classList.contains('dark') ? [255, 95, 38] : [224, 60, 0];
+        function palette() {
+            var dark = document.body.classList.contains('dark');
+            return dark
+                ? { dot: '226,229,238', acc: '255,95,38', base: 0.32, hi: 0.66 }
+                : { dot: '23,23,26',    acc: '224,60,0',  base: 0.24, hi: 0.50 };
         }
 
         function draw() {
-            t += 0.0032;
+            t += 0.0026;
             ctx.clearRect(0, 0, w, h);
-            ctx.fillStyle = '#08080a';
-            ctx.fillRect(0, 0, w, h);
 
-            var a = accent();
-            var cx = pointer.on ? pointer.x : 0.5 + Math.sin(t * 0.7) * 0.16;
-            var cy = pointer.on ? pointer.y : 0.42 + Math.cos(t * 0.5) * 0.12;
-
-            // the scan bar travels from horizon to viewer and lights each row it crosses
-            var sweep = (t * 0.34) % 1.35;
+            var c = palette();
+            var sweep = (t * 0.3) % 1.5;
+            var cx = pointer.on ? pointer.x : 0.5 + Math.sin(t * 0.6) * 0.1;
+            var cy = pointer.on ? pointer.y : 0.75;
 
             for (var i = 0; i < pts.length; i++) {
                 var p = pts[i];
 
-                // terrain height — rolling wave that scrolls toward the viewer
-                var wave = Math.sin(p.p + t * 2.4 - p.k * 4.2) * 0.055 * p.near;
+                var wave = Math.sin(p.p + t * 2.1 - p.k * 4) * 0.05 * p.near;
 
-                // depth-well around the pointer
                 var dx = p.spread - cx, dy = p.y - cy;
-                var pull = 0.045 / ((dx * dx + dy * dy) * 20 + 0.08);
+                var pull = 0.04 / ((dx * dx + dy * dy) * 26 + 0.09);
 
-                var x = (p.spread + dx * pull * 0.8) * w;
-                var y = (p.y - wave + dy * pull * 0.4) * h;
+                var x = (p.spread + dx * pull * 0.7) * w;
+                var y = (p.y - wave + dy * pull * 0.35) * h;
+                if (x < -20 || x > w + 20) continue;
 
-                var depth = 0.12 + p.near * 0.88;                    // near points read brighter
-                var scan = Math.max(0, 1 - Math.abs(p.near - sweep) * 9);
-                var hot = Math.min(1, pull * 1.9 + scan);
-                var r = (0.5 + p.near * 1.9) * (1 + scan * 0.8) + p.j * 0.3;
+                var depth = 0.1 + p.near * 0.9;
+                var scan = Math.max(0, 1 - Math.abs(p.near - sweep) * 8);
+                var hot = Math.min(1, pull * 1.5 + scan);
+                var r = (0.4 + p.near * 1.5) * (1 + scan * 0.7);
 
-                if (hot > 0.04) {
-                    ctx.fillStyle = 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',' + Math.min(1, hot * (0.35 + depth)).toFixed(3) + ')';
+                if (hot > 0.05) {
+                    ctx.fillStyle = 'rgba(' + c.acc + ',' + Math.min(c.hi, hot * depth * c.hi * 1.8).toFixed(3) + ')';
                 } else {
-                    ctx.fillStyle = 'rgba(226,229,238,' + (0.09 + depth * 0.4).toFixed(3) + ')';
+                    ctx.fillStyle = 'rgba(' + c.dot + ',' + (depth * c.base).toFixed(3) + ')';
                 }
                 ctx.beginPath();
                 ctx.arc(x, y, r, 0, 6.2832);
                 ctx.fill();
             }
 
-            // horizon haze
-            var haze = ctx.createLinearGradient(0, (HORIZON - 0.16) * h, 0, (HORIZON + 0.06) * h);
-            haze.addColorStop(0, 'rgba(255,255,255,0)');
-            haze.addColorStop(1, 'rgba(' + a[0] + ',' + a[1] + ',' + a[2] + ',0.09)');
-            ctx.fillStyle = haze;
-            ctx.fillRect(0, (HORIZON - 0.16) * h, w, 0.22 * h);
-
-            // scrim so the headline stays readable over the bright near field
-            var scrim = ctx.createLinearGradient(0, 0.5 * h, 0, h);
-            scrim.addColorStop(0, 'rgba(8,8,10,0)');
-            scrim.addColorStop(1, 'rgba(8,8,10,0.82)');
-            ctx.fillStyle = scrim;
-            ctx.fillRect(0, 0.5 * h, w, 0.5 * h);
-
             raf = requestAnimationFrame(draw);
         }
 
         function start() {
-            if (raf || reduceMotion) { if (reduceMotion) still(); return; }
-            if (!size()) { requestAnimationFrame(start); return; }
+            if (raf) return;
+            size();
             if (!pts.length) seed();
+            if (reduceMotion) { draw(); stop(); return; }
             raf = requestAnimationFrame(draw);
         }
-
-        function still() {
-            if (!size()) return;
-            if (!pts.length) seed();
-            draw();
-            cancelAnimationFrame(raf);
-            raf = null;
-        }
-
         function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
 
-        canvas.addEventListener('pointermove', function (e) {
-            var r = canvas.getBoundingClientRect();
-            pointer.x = (e.clientX - r.left) / r.width;
-            pointer.y = (e.clientY - r.top) / r.height;
+        window.addEventListener('pointermove', function (e) {
+            pointer.x = e.clientX / window.innerWidth;
+            pointer.y = e.clientY / window.innerHeight;
             pointer.on = true;
-        });
-        canvas.addEventListener('pointerleave', function () { pointer.on = false; });
+        }, { passive: true });
+        window.addEventListener('pointerleave', function () { pointer.on = false; });
 
+        var resizeTimer = null;
         window.addEventListener('resize', function () {
-            if (size()) seed();
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () { size(); seed(); }, 120);
         });
 
         document.addEventListener('visibilitychange', function () {
-            if (document.hidden) stop();
-            else if (current === 0) start();
+            if (document.hidden) stop(); else start();
         });
 
-        return { start: start, stop: stop };
+        start();
     })();
 
     /* ---------------------------------------------------------------------
@@ -416,7 +347,7 @@
        --------------------------------------------------------------------- */
     var start = SECTIONS.indexOf((window.location.hash || '').replace('#', ''));
     if (new URLSearchParams(window.location.search).has('submitted')) {
-        var form = document.querySelector('.contact-form');
+        var form = document.querySelector('.form');
         var success = document.getElementById('form-success');
         if (form && success) { form.hidden = true; success.hidden = false; }
         history.replaceState(null, '', window.location.pathname);
