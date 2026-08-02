@@ -563,34 +563,82 @@ img { max-width: 100%; display: block; }
 /* ==========================================================================
    FRAME 4 — skills spec sheet
    ========================================================================== */
-.frame--skills { max-width: 580px; }
+.frame--skills { max-width: 620px; }
 
 .spec { border-top: 1px solid var(--rule); }
-.spec dt {
+
+.grp { padding: 16px 0 18px; border-bottom: 1px solid var(--rule); }
+.grp h3 {
     font-family: var(--font-mono);
-    font-size: .56rem;
+    font-size: .58rem;
+    font-weight: 600;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: var(--text-muted);
-    padding-top: 18px;
+    color: var(--text-primary);
 }
-.spec dd {
+.grp h3 em { font-style: normal; font-weight: 400; color: var(--accent); }
+/* opt out of the uppercase run so "iOS" keeps its real casing */
+.grp h3 .kase { text-transform: none; letter-spacing: .1em; }
+.grp p {
+    margin-top: 7px;
+    font-size: .76rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 34rem;
+}
+.grp ul {
+    list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 7px;
-    padding: 10px 0 18px;
-    border-bottom: 1px solid var(--rule);
+    gap: 6px;
+    margin-top: 12px;
 }
-.spec dd span {
-    font-size: .82rem;
+.grp li {
+    font-size: .78rem;
     letter-spacing: -.01em;
-    padding: 5px 12px;
+    padding: 4px 11px;
     border-radius: 99px;
     border: 1px solid var(--rule);
     background: var(--card);
     transition: border-color 240ms var(--ease), color 240ms var(--ease);
 }
-.spec dd span:hover { border-color: var(--accent); color: var(--accent); }
+.grp li:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ==========================================================================
+   HIRE CTA — apps frame
+   ========================================================================== */
+.hire {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    margin-top: 14px;
+    padding: 15px 18px;
+    border-radius: 14px;
+    border: 1px solid var(--rule);
+    background: var(--card);
+    text-align: left;
+    transition: background-color 260ms var(--ease), border-color 260ms var(--ease);
+}
+.hire:hover { background: var(--card-hover); border-color: var(--accent); }
+.hire b {
+    flex: 0 0 auto;
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: -.015em;
+}
+.hire span {
+    flex: 1;
+    font-size: .72rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+.hire em {
+    font-style: normal;
+    color: var(--text-subtle);
+    transition: color 240ms var(--ease), transform 240ms var(--ease);
+}
+.hire:hover em { color: var(--accent); transform: translateX(4px); }
 
 /* ==========================================================================
    FRAME 5 — contact form
@@ -832,6 +880,9 @@ img { max-width: 100%; display: block; }
 
     .cards { grid-template-columns: 1fr; }
     .card { padding: 14px; }
+    .hire { flex-wrap: wrap; gap: 6px 12px; }
+    .hire b { flex-basis: 100%; }
+    .grp p { font-size: .72rem; }
 
     .form__grid { grid-template-columns: 1fr; gap: 4px; }
     .f--half { grid-column: 1 / -1; }
