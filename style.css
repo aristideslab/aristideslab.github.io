@@ -607,7 +607,7 @@ img { max-width: 100%; display: block; }
     font-size: .53rem;
     letter-spacing: .14em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--text-primary);
     margin-bottom: 5px;
 }
 .f input,
@@ -629,9 +629,14 @@ img { max-width: 100%; display: block; }
 }
 .f select { cursor: pointer; }
 .f textarea { resize: none; line-height: 1.55; }
+/* Placeholders sit one step below the ink so a filled field still reads as
+   filled, but at full 7:1 contrast rather than the old hairline grey. */
 .f input::placeholder,
-.f textarea::placeholder { color: var(--text-subtle); }
-.f select:invalid { color: var(--text-subtle); }
+.f textarea::placeholder { color: var(--text-secondary); opacity: 1; }
+.f select:invalid { color: var(--text-secondary); }
+/* Optional selects are never :invalid — match on the unchosen option instead
+   so every select's resting state looks the same. */
+.f select:has(option[value=""]:checked) { color: var(--text-secondary); }
 .f option { color: var(--text-primary); background: var(--bg); }
 .f input:focus,
 .f select:focus,
@@ -664,7 +669,7 @@ img { max-width: 100%; display: block; }
 }
 .submit:hover { filter: brightness(1.08); }
 .submit:active { transform: scale(.985); }
-.form__note { font-size: .7rem; color: var(--text-muted); }
+.form__note { font-size: .7rem; color: var(--text-primary); }
 
 .success { text-align: center; padding: 40px 20px; }
 .success__mark {
@@ -677,7 +682,7 @@ img { max-width: 100%; display: block; }
     display: flex; align-items: center; justify-content: center;
 }
 .success__title { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -.02em; }
-.success__body { font-size: .85rem; color: var(--text-secondary); }
+.success__body { font-size: .85rem; color: var(--text-primary); }
 
 /* ==========================================================================
    RIGHT PANEL
