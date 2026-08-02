@@ -1,4 +1,4 @@
-robots.txt for aristidesai.github.io
+robots.txt for aristideslab.github.io
 Aristides Lintzeris | ComfyUI Artist | AI Workflow Designer | Visual Artist | TouchDesigner Expert | Sydney Based | Professional | Brand Safe | Commissions Open
 ComfyUI AI Workflows | ComfyUI Custom Nodes | ComfyUI Specialist | ComfyUI Consultant | ComfyUI Developer | ComfyUI Automation | ComfyUI Pipeline Designer
 Stable Diffusion Artist | Stable Diffusion Workflows | SDXL Workflows | Flux Workflows | AI Image Generation | AI Art Generation | AI Visual Design
@@ -325,4 +325,4 @@ Quick Turnaround | Fast Delivery | Efficient Process | Streamlined Workflow | Ag
 User-agent: *
 Allow: /
 
-Sitemap: https://aristidesai.github.io/sitemap.xml
+Sitemap: https://aristideslab.github.io/sitemap.xml

@@ -2,315 +2,495 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aristides Lintzeris | ComfyUI Artist & AI Workflow Designer | Commissions Open </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Aristides Lintzeris | ComfyUI Artist &amp; AI Workflow Designer | Commissions Open</title>
     <meta name="description" content="Aristides Lintzeris — ComfyUI artist, AI workflow designer, and visual artist specializing in generative art, AI image generation, TouchDesigner, and immersive visual experiences. Available for commissions.">
     <meta name="keywords" content="ComfyUI artist, ComfyUI commissions, AI workflow designer, AI art commissions, generative art, AI image generation, TouchDesigner, visual design, tech art, creative coding, AI visual artist, ComfyUI workflows, Stable Diffusion artist">
     <meta name="author" content="Aristides Lintzeris">
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="18XWrv7DqeHKkIyV-M6-v5PQtlTfLE-e-UGmm1Poluc" />
-    <link rel="canonical" href="https://aristidesai.github.io/">
-    <meta property="og:title" content="Aristides Lintzeris | ComfyUI Artist & AI Workflow Designer">
+    <meta name="theme-color" content="#f3f2ee" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
+    <link rel="canonical" href="https://aristideslab.github.io/">
+    <meta property="og:title" content="Aristides Lintzeris | ComfyUI Artist &amp; AI Workflow Designer">
     <meta property="og:description" content="ComfyUI artist and AI workflow designer specializing in generative art, visual design, and immersive experiences. Available for commissions.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://aristidesai.github.io/">
+    <meta property="og:url" content="https://aristideslab.github.io/">
+    <meta property="og:site_name" content="Aristides Lab">
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Aristides Lintzeris | ComfyUI Artist & AI Workflow Designer">
+    <meta name="twitter:title" content="Aristides Lintzeris | ComfyUI Artist &amp; AI Workflow Designer">
     <meta name="twitter:description" content="ComfyUI artist and AI workflow designer. Generative art, visual design, and commissions.">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127802;</text></svg>">
+    <link rel="preconnect" href="https://www.instagram.com">
     <link rel="stylesheet" href="style.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Aristides Lintzeris",
+      "alternateName": "Aristides Lab",
+      "url": "https://aristideslab.github.io/",
+      "jobTitle": "Digital Artist & AI Workflow Designer",
+      "knowsAbout": ["TouchDesigner", "ComfyUI", "Generative Art", "Real-time Graphics", "iOS Development", "LiDAR"],
+      "sameAs": [
+        "https://www.instagram.com/aristides.lab/",
+        "https://www.youtube.com/@Aristides-Lab",
+        "https://github.com/AristidesAI",
+        "https://www.patreon.com/cw/aristideslab"
+      ]
+    }
+    </script>
 </head>
-<body>
+<body data-section="0">
 
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">dark</button>
+<a class="skip-link" href="#panel">Skip to section details</a>
 
-<!-- FIXED SOCIAL SIDEBAR — top left -->
-<nav class="social-sidebar">
-    <a href="https://www.instagram.com/aristides.lab/" target="_blank" class="social-link">IG</a>
-    <a href="https://www.patreon.com/cw/aristideslab" target="_blank" class="social-link">PA</a>
-    <a href="https://github.com/AristidesAI" target="_blank" class="social-link">GH</a>
-    <a href="https://www.youtube.com/@AristidesTD" target="_blank" class="social-link">YT</a>
-    <a href="https://apps.apple.com/us/app/tdlidar/id6760954732" target="_blank" class="social-link">TD</a>
-    <a href="https://buymeacoffee.com/aristides.lab" target="_blank" class="social-link">☕</a>
+<!-- ===== TOP BAR ===== -->
+<header class="topbar">
+    <a class="wordmark" href="#index" data-goto="0">
+        <span class="wordmark__mark" aria-hidden="true"></span>
+        <span class="wordmark__text">ARISTIDES<em>LAB</em></span>
+    </a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" aria-pressed="false">
+        <span class="theme-toggle__dot" aria-hidden="true"></span>
+        <span class="theme-toggle__label">dark</span>
+    </button>
+</header>
+
+<!-- ===== SOCIAL RAIL (class kept for snake.js) ===== -->
+<nav class="social-sidebar" aria-label="Social links">
+    <a href="https://www.instagram.com/aristides.lab/" target="_blank" rel="noopener" class="social-link" title="Instagram">IG</a>
+    <a href="https://www.patreon.com/cw/aristideslab" target="_blank" rel="noopener" class="social-link" title="Patreon">PA</a>
+    <a href="https://github.com/AristidesAI" target="_blank" rel="noopener" class="social-link" title="GitHub">GH</a>
+    <a href="https://www.youtube.com/@AristidesTD" target="_blank" rel="noopener" class="social-link" title="YouTube">YT</a>
+    <a href="https://apps.apple.com/us/app/tdlidar/id6760954732" target="_blank" rel="noopener" class="social-link" title="TDLidar on the App Store">TD</a>
+    <a href="https://buymeacoffee.com/aristides.lab" target="_blank" rel="noopener" class="social-link" title="Buy me a coffee">☕</a>
 </nav>
 
-<main class="content">
+<!-- ===== STAGE ===== -->
+<main class="stage">
 
-    <!-- ABOUT -->
-    <section id="about" class="block">
-        <div class="block-header">
-            <h2>About</h2>
-        </div>
-        <div class="block-content about-content">
-            <div class="about-flex">
-                <p>I am a digital artist and premier web developer specializing in immersive experiences and technical rendering. I work with Touchdesigner, ComfyUI custom workflows and other novel software. Press W key to have fun😉<a href="https://www.patreon.com/cw/aristideslab" target="_blank" class="support-link">Support my work</a></p>
+    <!-- ---------- LEFT COLUMN ---------- -->
+    <div class="col col--left">
+        <div class="col__head" aria-hidden="true"></div>
 
+        <div class="titles">
+            <div class="title" data-title="0">
+                <p class="title__eyebrow">00 / Index</p>
+                <h1 class="title__main"><span>Aristides</span> <span>Lintzeris</span></h1>
+                <p class="title__sub">Lab</p>
+            </div>
+            <div class="title" data-title="1">
+                <p class="title__eyebrow">01 / Portfolio</p>
+                <h2 class="title__main">Portfolio</h2>
+                <p class="title__sub">Reels &amp; breakdowns</p>
+            </div>
+            <div class="title" data-title="2">
+                <p class="title__eyebrow">02 / Apps</p>
+                <h2 class="title__main">Apps</h2>
+                <p class="title__sub">Shipped on iOS</p>
+            </div>
+            <div class="title" data-title="3">
+                <p class="title__eyebrow">03 / Links</p>
+                <h2 class="title__main">Links</h2>
+                <p class="title__sub">Elsewhere</p>
+            </div>
+            <div class="title" data-title="4">
+                <p class="title__eyebrow">04 / Skills</p>
+                <h2 class="title__main">Skills</h2>
+                <p class="title__sub">The stack</p>
+            </div>
+            <div class="title" data-title="5">
+                <p class="title__eyebrow">05 / Contact</p>
+                <h2 class="title__main">Contact</h2>
+                <p class="title__sub">Commissions open</p>
             </div>
         </div>
-    </section>
 
-    <!-- PORTFOLIO -->
-    <section id="portfolio" class="block">
-        <div class="block-header">
-            <h2><i>Portfolio</i></h2>
+        <div class="col__foot">
+            <nav class="dots" aria-label="Sections">
+                <button class="dot" data-goto="0" aria-label="Index" aria-current="true"></button>
+                <button class="dot" data-goto="1" aria-label="Portfolio"></button>
+                <button class="dot" data-goto="2" aria-label="Apps"></button>
+                <button class="dot" data-goto="3" aria-label="Links"></button>
+                <button class="dot" data-goto="4" aria-label="Skills"></button>
+                <button class="dot" data-goto="5" aria-label="Contact"></button>
+            </nav>
+            <p class="credit">Scroll, arrow keys, or tap the dots<span class="credit__sep">·</span>Press <kbd>W</kbd> ×3 for fun</p>
         </div>
-        <div class="block-content">
-            <p class="section-desc">Recent experiments, Patreon drops, and video breakdowns.</p>
+    </div>
 
-            <div class="embed-stack">
-                <div class="embed-item">
-                    <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DZ8HZV3SOWS/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:calc(100% - 2px);"><div style="padding:16px;"><a href="https://www.instagram.com/reel/DZ8HZV3SOWS/?utm_source=ig_embed&amp;utm_campaign=loading" style="background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">View this post on Instagram</a><p style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/reel/DZ8HZV3SOWS/?utm_source=ig_embed&amp;utm_campaign=loading" style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">A post shared by Aristides Lintzeris (@aristides.lab)</a></p></div></blockquote>
+    <!-- ---------- CENTER: THE DEVICE ---------- -->
+    <div class="col col--device">
+        <div class="device" id="device">
+            <span class="device__btn device__btn--action" aria-hidden="true"></span>
+            <span class="device__btn device__btn--up" aria-hidden="true"></span>
+            <span class="device__btn device__btn--down" aria-hidden="true"></span>
+            <span class="device__btn device__btn--power" aria-hidden="true"></span>
+
+            <div class="device__screen">
+                <div class="statusbar" id="statusbar" aria-hidden="true">
+                    <span class="statusbar__time" id="clock">9:41</span>
+                    <span class="statusbar__icons">
+                        <svg viewBox="0 0 18 12" width="17" height="11"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="6" width="3" height="6" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                        <svg viewBox="0 0 16 12" width="15" height="11"><path d="M8 11.2 5.9 8.9a3 3 0 0 1 4.2 0zM3.8 6.9 2.2 5.2a8.4 8.4 0 0 1 11.6 0l-1.6 1.7a6.1 6.1 0 0 0-8.4 0zM.6 3.6a11 11 0 0 1 14.8 0"/></svg>
+                        <svg viewBox="0 0 27 13" width="25" height="12"><rect x="0.5" y="0.5" width="22" height="12" rx="3.8" fill="none" stroke-width="1" opacity=".5"/><rect x="2" y="2" width="17" height="9" rx="2.2"/><path d="M24.5 4.3v4.4a2.6 2.6 0 0 0 0-4.4z" opacity=".5"/></svg>
+                    </span>
                 </div>
+                <div class="island" aria-hidden="true"></div>
 
-                <div class="embed-item">
-                    <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DZ4pu_zBjV5/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:calc(100% - 2px);"><div style="padding:16px;"><a href="https://www.instagram.com/reel/DZ4pu_zBjV5/?utm_source=ig_embed&amp;utm_campaign=loading" style="background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">View this post on Instagram</a><p style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/reel/DZ4pu_zBjV5/?utm_source=ig_embed&amp;utm_campaign=loading" style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">A post shared by Aristides Lintzeris (@aristides.lab)</a></p></div></blockquote>
-                </div>
+                <div class="screens">
 
-                <div class="embed-item">
-                    <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DZumeDfzRwq/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:calc(100% - 2px);"><div style="padding:16px;"><a href="https://www.instagram.com/reel/DZumeDfzRwq/?utm_source=ig_embed&amp;utm_campaign=loading" style="background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">View this post on Instagram</a><p style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/reel/DZumeDfzRwq/?utm_source=ig_embed&amp;utm_campaign=loading" style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">A post shared by Aristides Lintzeris (@aristides.lab)</a></p></div></blockquote>
-                </div>
+                    <!-- SCREEN 0 — INDEX -->
+                    <section class="screen screen--dark" data-screen="0" aria-label="Index">
+                        <canvas class="field" id="field"></canvas>
+                        <div class="hero">
+                            <p class="hero__eyebrow">Aristides Lab</p>
+                            <p class="hero__line">Real-time<br>systems,<br>rendered.</p>
+                            <p class="hero__meta">TouchDesigner · ComfyUI · iOS</p>
+                        </div>
+                        <div class="hero__hint" aria-hidden="true">
+                            <span class="hero__hintline"></span>
+                            <span>scroll</span>
+                        </div>
+                    </section>
 
-                <div class="embed-item">
-                    <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DZtHdUvSpV2/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:calc(100% - 2px);"><div style="padding:16px;"><a href="https://www.instagram.com/reel/DZtHdUvSpV2/?utm_source=ig_embed&amp;utm_campaign=loading" style="background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">View this post on Instagram</a><p style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/reel/DZtHdUvSpV2/?utm_source=ig_embed&amp;utm_campaign=loading" style="color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">A post shared by Aristides Lintzeris (@aristides.lab)</a></p></div></blockquote>
+                    <!-- SCREEN 1 — PORTFOLIO (Instagram reels) -->
+                    <section class="screen screen--dark" data-screen="1" aria-label="Portfolio reels">
+                        <div class="browser">
+                            <div class="browser__bar">
+                                <span class="browser__lock" aria-hidden="true">
+                                    <svg viewBox="0 0 10 12" width="9" height="11"><path d="M2 5V3.5a3 3 0 0 1 6 0V5h.5A1.5 1.5 0 0 1 10 6.5v4A1.5 1.5 0 0 1 8.5 12h-7A1.5 1.5 0 0 1 0 10.5v-4A1.5 1.5 0 0 1 1.5 5zm1.4 0h3.2V3.5a1.6 1.6 0 0 0-3.2 0z"/></svg>
+                                </span>
+                                <span class="browser__url">instagram.com/aristides.lab</span>
+                            </div>
+                            <div class="reels" id="reels">
+                                <div class="reel" data-reel="DZ8HZV3SOWS"><div class="reel__crop"></div></div>
+                                <div class="reel" data-reel="DZ4pu_zBjV5"><div class="reel__crop"></div></div>
+                                <div class="reel" data-reel="DZumeDfzRwq"><div class="reel__crop"></div></div>
+                                <div class="reel" data-reel="DZtHdUvSpV2"><div class="reel__crop"></div></div>
+                            </div>
+                            <div class="reels__nav">
+                                <button class="reels__btn" data-reel-prev aria-label="Previous reel">↑</button>
+                                <span class="reels__count"><b id="reelIndex">1</b>/4</span>
+                                <button class="reels__btn" data-reel-next aria-label="Next reel">↓</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SCREEN 2 — APPS (iOS home screen) -->
+                    <section class="screen screen--home" data-screen="2" aria-label="Apps home screen">
+                        <div class="wallpaper" aria-hidden="true"></div>
+                        <div class="springboard">
+                            <div class="appgrid">
+                                <a class="appicon" href="https://apps.apple.com/us/app/tdlidar/id6760954732" target="_blank" rel="noopener" data-app="0">
+                                    <img src="assets/tdlidar-256.png" alt="" width="256" height="256" loading="lazy" decoding="async">
+                                    <span>TDLidar</span>
+                                </a>
+                                <a class="appicon" href="https://apps.apple.com/us/app/zpth/id6777710069" target="_blank" rel="noopener" data-app="1">
+                                    <img src="assets/zpth-256.png" alt="" width="256" height="256" loading="lazy" decoding="async">
+                                    <span>ZPTH</span>
+                                </a>
+                                <a class="appicon" href="https://apps.apple.com/us/app/vision-emoji/id6759308509" target="_blank" rel="noopener" data-app="2">
+                                    <img src="assets/visionemoji-256.png" alt="" width="256" height="256" loading="lazy" decoding="async">
+                                    <span>Vision Emoji</span>
+                                </a>
+                                <a class="appicon" href="https://apps.apple.com/us/app/splat-frame/id6759489794" target="_blank" rel="noopener" data-app="3">
+                                    <img src="assets/splatframe-256.png" alt="" width="256" height="256" loading="lazy" decoding="async">
+                                    <span>Splat Frame</span>
+                                </a>
+                            </div>
+                            <div class="widget">
+                                <p class="widget__label">On device</p>
+                                <p class="widget__body">Every app runs its own inference locally. Nothing is uploaded, nothing leaves the phone.</p>
+                                <ul class="widget__stats">
+                                    <li><b>4</b><span>Apps shipped</span></li>
+                                    <li><b>0</b><span>Servers involved</span></li>
+                                    <li><b>iOS 17+</b><span>Swift · Metal · Core ML</span></li>
+                                </ul>
+                                <p class="widget__hint">Tap an icon to open it on the App&nbsp;Store.</p>
+                            </div>
+                        </div>
+                        <div class="pagedots" aria-hidden="true"><i class="is-on"></i><i></i></div>
+                        <div class="dock">
+                            <a class="dockicon" href="https://tdlidar.github.io/DOC/" target="_blank" rel="noopener" title="TDLiDAR docs"><span>Docs</span></a>
+                            <a class="dockicon" href="https://www.patreon.com/aristideslab/posts/tdlidar-operator-163658679" target="_blank" rel="noopener" title="TouchDesigner operator family"><span>TD Ops</span></a>
+                        </div>
+                    </section>
+
+                    <!-- SCREEN 3 — LINKS (iOS settings list) -->
+                    <section class="screen screen--light" data-screen="3" aria-label="Links">
+                        <div class="ios">
+                            <h3 class="ios__title">Links</h3>
+                            <p class="ios__group">Watch &amp; support</p>
+                            <div class="ios__list">
+                                <a class="row" href="https://www.youtube.com/@Aristides-Lab" target="_blank" rel="noopener">
+                                    <span class="row__tile row__tile--yt">▶</span>
+                                    <span class="row__text"><b>YouTube</b><i>@Aristides-Lab</i></span>
+                                    <span class="row__chev" aria-hidden="true">›</span>
+                                </a>
+                                <a class="row" href="https://www.patreon.com/cw/aristideslab" target="_blank" rel="noopener">
+                                    <span class="row__tile row__tile--pa">P</span>
+                                    <span class="row__text"><b>Patreon</b><i>Workflows, files, breakdowns</i></span>
+                                    <span class="row__chev" aria-hidden="true">›</span>
+                                </a>
+                                <a class="row" href="https://buymeacoffee.com/aristides.lab" target="_blank" rel="noopener">
+                                    <span class="row__tile row__tile--bmc">☕</span>
+                                    <span class="row__text"><b>Buy Me a Coffee</b><i>@aristides.lab</i></span>
+                                    <span class="row__chev" aria-hidden="true">›</span>
+                                </a>
+                            </div>
+                            <p class="ios__group">Follow &amp; code</p>
+                            <div class="ios__list">
+                                <a class="row" href="https://www.instagram.com/aristides.lab/" target="_blank" rel="noopener">
+                                    <span class="row__tile row__tile--ig">◎</span>
+                                    <span class="row__text"><b>Instagram</b><i>@aristides.lab</i></span>
+                                    <span class="row__chev" aria-hidden="true">›</span>
+                                </a>
+                                <a class="row" href="https://github.com/AristidesAI" target="_blank" rel="noopener">
+                                    <span class="row__tile row__tile--gh">&lt;/&gt;</span>
+                                    <span class="row__text"><b>GitHub</b><i>AristidesAI</i></span>
+                                    <span class="row__chev" aria-hidden="true">›</span>
+                                </a>
+                                <a class="row" href="https://tdlidar.github.io/DOC/" target="_blank" rel="noopener">
+                                    <span class="row__tile row__tile--doc">§</span>
+                                    <span class="row__text"><b>TDLiDAR Docs</b><i>Setup &amp; OSC reference</i></span>
+                                    <span class="row__chev" aria-hidden="true">›</span>
+                                </a>
+                            </div>
+                            <p class="ios__foot">Fastest reply is an Instagram DM.<br>Commissions and collaborations welcome.</p>
+                        </div>
+                    </section>
+
+                    <!-- SCREEN 4 — SKILLS -->
+                    <section class="screen screen--light" data-screen="4" aria-label="Skills">
+                        <div class="ios">
+                            <h3 class="ios__title">Stack</h3>
+                            <p class="ios__group">Real-time</p>
+                            <div class="ios__list ios__list--plain">
+                                <span class="line"><b>TouchDesigner</b><i>Primary</i></span>
+                                <span class="line"><b>Unreal Engine</b><i></i></span>
+                                <span class="line"><b>Unity</b><i></i></span>
+                            </div>
+                            <p class="ios__group">Generative &amp; AI</p>
+                            <div class="ios__list ios__list--plain">
+                                <span class="line"><b>ComfyUI</b><i>Custom workflows</i></span>
+                                <span class="line"><b>Redis</b><i></i></span>
+                            </div>
+                            <p class="ios__group">3D &amp; render</p>
+                            <div class="ios__list ios__list--plain">
+                                <span class="line"><b>Blender</b><i></i></span>
+                                <span class="line"><b>Redshift</b><i></i></span>
+                                <span class="line"><b>CLO3D</b><i></i></span>
+                            </div>
+                            <p class="ios__group">Post &amp; motion</p>
+                            <div class="ios__list ios__list--plain">
+                                <span class="line"><b>DaVinci Resolve</b><i></i></span>
+                                <span class="line"><b>Final Cut Pro</b><i></i></span>
+                                <span class="line"><b>Adobe Suite</b><i>Ai · Ae · Ps + extras</i></span>
+                                <span class="line"><b>Logic</b><i></i></span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- SCREEN 5 — CONTACT -->
+                    <section class="screen screen--light" data-screen="5" aria-label="Contact form">
+                        <div class="ios">
+                            <h3 class="ios__title">New Inquiry</h3>
+                            <form action="https://formsubmit.co/aristideslintzeris@gmail.com" method="POST" class="contact-form">
+                                <input type="hidden" name="_subject" value="New inquiry from aristideslab.github.io">
+                                <input type="hidden" name="_captcha" value="true">
+                                <input type="hidden" name="_template" value="table">
+                                <input type="hidden" name="_next" value="https://aristideslab.github.io/?submitted=true">
+
+                                <p class="ios__group">About you</p>
+                                <div class="ios__list">
+                                    <label class="field-row">
+                                        <span>Name *</span>
+                                        <input type="text" name="name" id="name" required placeholder="Your full name">
+                                    </label>
+                                    <label class="field-row">
+                                        <span>Email *</span>
+                                        <input type="email" name="email" id="email" required placeholder="you@example.com">
+                                    </label>
+                                    <label class="field-row">
+                                        <span>Company</span>
+                                        <input type="text" name="company" id="company" placeholder="Optional">
+                                    </label>
+                                </div>
+
+                                <p class="ios__group">The project</p>
+                                <div class="ios__list">
+                                    <label class="field-row">
+                                        <span>Reason *</span>
+                                        <select name="reason" id="reason" required>
+                                            <option value="" disabled selected>Choose…</option>
+                                            <option>Commission - AI Art / ComfyUI</option>
+                                            <option>Commission - TouchDesigner</option>
+                                            <option>Commission - Live Visuals / VJ</option>
+                                            <option>Commission - 3D / Blender / CLO3D</option>
+                                            <option>Custom AI Workflow Development</option>
+                                            <option>Brand / Agency Collaboration</option>
+                                            <option>Consulting / Strategy</option>
+                                            <option>Workshop / Speaking</option>
+                                            <option>iOS App Inquiry</option>
+                                            <option>General Question</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </label>
+                                    <label class="field-row">
+                                        <span>Budget</span>
+                                        <select name="budget" id="budget">
+                                            <option value="" disabled selected>Select range</option>
+                                            <option>Under $500</option>
+                                            <option>$500 - $1,000</option>
+                                            <option>$1,000 - $5,000</option>
+                                            <option>$5,000 - $10,000</option>
+                                            <option>$10,000+</option>
+                                            <option>Let's discuss</option>
+                                        </select>
+                                    </label>
+                                    <label class="field-row">
+                                        <span>Timeline</span>
+                                        <select name="timeline" id="timeline">
+                                            <option value="" disabled selected>When?</option>
+                                            <option>ASAP / Rush</option>
+                                            <option>1-2 weeks</option>
+                                            <option>1 month</option>
+                                            <option>2-3 months</option>
+                                            <option>Flexible / Ongoing</option>
+                                        </select>
+                                    </label>
+                                </div>
+
+                                <p class="ios__group">Details *</p>
+                                <div class="ios__list">
+                                    <textarea name="message" id="message" rows="5" required placeholder="What you're looking for, references or inspiration, and anything else that helps me understand your vision."></textarea>
+                                </div>
+
+                                <p class="ios__group">How did you find me?</p>
+                                <div class="ios__list">
+                                    <label class="field-row">
+                                        <span>Source</span>
+                                        <select name="referral" id="referral">
+                                            <option value="" disabled selected>Select one</option>
+                                            <option>Google Search</option>
+                                            <option>Instagram</option>
+                                            <option>YouTube</option>
+                                            <option>GitHub</option>
+                                            <option>Patreon</option>
+                                            <option>Word of Mouth</option>
+                                            <option>AI Search (ChatGPT, Perplexity, etc.)</option>
+                                            <option>Other</option>
+                                        </select>
+                                    </label>
+                                </div>
+
+                                <button type="submit" class="form-submit">Send Message</button>
+                                <p class="form-note">Replies usually within 48 hours.</p>
+                            </form>
+
+                            <div id="form-success" class="form-success" hidden>
+                                <p class="form-success__mark">✓</p>
+                                <p class="form-success__title">Message sent</p>
+                                <p class="form-success__body">Thanks for reaching out — I'll get back to you soon.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                </div><!-- /screens -->
+
+                <div class="homebar" aria-hidden="true"></div>
+            </div><!-- /device__screen -->
+        </div><!-- /device -->
+    </div>
+
+    <!-- ---------- RIGHT COLUMN ---------- -->
+    <div class="col col--panel" id="panel">
+        <div class="panels">
+
+            <div class="panel" data-panel="0">
+                <p class="panel__lede">Immersive experiences and technical rendering.</p>
+                <p class="panel__body">I'm a digital artist and web developer working in TouchDesigner, custom ComfyUI workflows, and other novel software — plus a handful of on-device iOS apps.</p>
+                <p class="panel__body">Commissions are open.</p>
+                <a class="panel__cta" href="https://www.patreon.com/cw/aristideslab" target="_blank" rel="noopener">Support my work ↗</a>
+                <button class="panel__ghost" data-goto="5">Get in touch →</button>
+            </div>
+
+            <div class="panel" data-panel="1">
+                <p class="panel__lede">Recent experiments.</p>
+                <p class="panel__body">Patreon drops, video breakdowns, and work-in-progress from the lab. Use the arrows on screen to page through reels.</p>
+                <dl class="meta">
+                    <dt>Source</dt><dd>Instagram · @aristides.lab</dd>
+                    <dt>Tools</dt><dd>TouchDesigner, ComfyUI</dd>
+                </dl>
+                <a class="panel__cta" href="https://www.instagram.com/aristides.lab/" target="_blank" rel="noopener">See everything ↗</a>
+            </div>
+
+            <div class="panel" data-panel="2">
+                <p class="panel__lede">Four apps, all on-device.</p>
+                <div class="applist" id="applist">
+                    <div class="applist__item" data-app-detail="0">
+                        <b>TDLidar</b>
+                        <p>Stream LiDAR point cloud data from iPhone to TouchDesigner over OSC for real-time 3D scanning and interactive installations.</p>
+                    </div>
+                    <div class="applist__item" data-app-detail="1">
+                        <b>ZPTH</b>
+                        <p>Turn your iPhone's depth camera into a living visual instrument. 20 real-time depth modes — contour, plasma, chrome, living cells, pixel dither. Photo or video, 100% on-device.</p>
+                    </div>
+                    <div class="applist__item" data-app-detail="2">
+                        <b>Vision Emoji</b>
+                        <p>Real-time object detection that overlays matching Apple emoji onto your camera feed. 80+ categories, 1000+ classifications, 100% on-device.</p>
+                    </div>
+                    <div class="applist__item" data-app-detail="3">
+                        <b>Splat Frame</b>
+                        <p>3D parallax display using TrueDepth face tracking. Move your head to peer through a portal into a virtual room of your photos and videos.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- APPS -->
-    <section id="apps" class="block">
-        <div class="block-header">
-            <h2><b>Apps</b></h2>
-        </div>
-        <div class="block-content">
-            <p class="section-desc">iOS apps I've built.</p>
-            <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch;">
-                <a href="https://apps.apple.com/us/app/tdlidar/id6760954732" target="_blank" class="app-card">
-                    <img src="assets/tdlidar-icon.png" alt="TDLidar" class="app-icon">
-                    <div class="app-text">
-                        <span class="app-name">TDLidar</span>
-                        <span class="app-desc">Stream LiDAR point cloud data from iPhone to TouchDesigner via OSC for real-time 3D scanning and interactive installations.</span>
-                    </div>
-                </a>
-                <a href="https://apps.apple.com/us/app/zpth/id6777710069" target="_blank" class="app-card">
-                    <img src="assets/ZPTH-iOS-Default-1024x1024@1x.png" alt="ZPTH" class="app-icon">
-                    <div class="app-text">
-                        <span class="app-name">ZPTH</span>
-                        <span class="app-desc">Turn your iPhone's depth camera into a living visual instrument. 20 real-time depth modes — contour, plasma, chrome, living cells, pixel dither. Capture photo or video, 100% on-device.</span>
-                    </div>
-                </a>
-                <a href="https://apps.apple.com/us/app/vision-emoji/id6759308509" target="_blank" class="app-card">
-                    <img src="assets/visionemoji-icon.png" alt="Vision Emoji" class="app-icon">
-                    <div class="app-text">
-                        <span class="app-name">Vision Emoji</span>
-                        <span class="app-desc">Real-time object detection that overlays matching Apple emojis onto your camera feed. 80+ categories, 1000+ classifications, 100% on-device.</span>
-                    </div>
-                </a>
-                <a href="https://apps.apple.com/us/app/splat-frame/id6759489794" target="_blank" class="app-card">
-                    <img src="assets/splatframe-icon.png" alt="Splat Frame" class="app-icon">
-                    <div class="app-text">
-                        <span class="app-name">Splat Frame</span>
-                        <span class="app-desc">3D parallax display using TrueDepth face tracking. Move your head to peer through a portal into a virtual room with your photos and videos.</span>
-                    </div>
-                </a>
+            <div class="panel" data-panel="3">
+                <p class="panel__lede">Elsewhere.</p>
+                <p class="panel__body">Long-form breakdowns land on YouTube. Project files, workflows, and the TouchDesigner operator family live on Patreon.</p>
+                <dl class="meta">
+                    <dt>Fastest reply</dt><dd>Instagram DMs</dd>
+                    <dt>Code</dt><dd>github.com/AristidesAI</dd>
+                </dl>
             </div>
-            <div class="tdlidar-links">
-                <a href="https://tdlidar.github.io/DOC/" target="_blank" class="tdlidar-link">TDLiDAR Docs &rarr;</a>
-                <a href="https://www.patreon.com/aristideslab/posts/tdlidar-operator-163658679" target="_blank" class="tdlidar-link">TouchDesigner Operator Family &rarr;</a>
+
+            <div class="panel" data-panel="4">
+                <p class="panel__lede">The software I actually use.</p>
+                <p class="panel__body">Most work starts in TouchDesigner and ends somewhere it wasn't supposed to. ComfyUI handles the generative passes; everything else is finishing.</p>
+                <dl class="meta">
+                    <dt>Primary</dt><dd>TouchDesigner</dd>
+                    <dt>Generative</dt><dd>ComfyUI</dd>
+                    <dt>Shipping</dt><dd>Swift · iOS</dd>
+                </dl>
             </div>
-        </div>
-    </section>
 
-    <!-- LINKS -->
-    <section id="links" class="block">
-        <div class="block-header">
-            <h2><b>Links</b></h2>
-        </div>
-        <div class="block-content">
-            <div style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch;">
-                <a href="https://www.youtube.com/@Aristides-Lab" target="_blank" class="yt-channel-card">
-                    <div class="yt-play">&#9654;</div>
-                    <div class="yt-text">
-                        <span class="yt-label">YouTube</span>
-                        <span class="yt-sub">@Aristides-Lab</span>
-                    </div>
-                </a>
-                <a href="https://www.patreon.com/cw/aristideslab" target="_blank" class="yt-channel-card">
-                    <div class="yt-play">P</div>
-                    <div class="yt-text">
-                        <span class="yt-label">Patreon</span>
-                        <span class="yt-sub">Support the work</span>
-                    </div>
-                </a>
-                <a href="https://www.instagram.com/aristides.lab/" target="_blank" class="yt-channel-card">
-                    <div class="yt-play">IG</div>
-                    <div class="yt-text">
-                        <span class="yt-label">Instagram</span>
-                        <span class="yt-sub">@aristides.lab</span>
-                    </div>
-                </a>
-                <a href="https://github.com/AristidesAI" target="_blank" class="yt-channel-card">
-                    <div class="yt-play">&lt;/&gt;</div>
-                    <div class="yt-text">
-                        <span class="yt-label">GitHub</span>
-                        <span class="yt-sub">AristidesAI</span>
-                    </div>
-                </a>
-                <a href="https://buymeacoffee.com/aristides.lab" target="_blank" class="yt-channel-card">
-                    <div class="yt-play">☕</div>
-                    <div class="yt-text">
-                        <span class="yt-label">Buy Me a Coffee</span>
-                        <span class="yt-sub">@aristides.lab</span>
-                    </div>
-                </a>
+            <div class="panel" data-panel="5">
+                <p class="panel__lede">Commissions open.</p>
+                <p class="panel__body">Interested in a commission, collaboration, or just want to say hello? Fill in the form on screen and I'll get back to you.</p>
+                <dl class="meta">
+                    <dt>Available for</dt><dd>Commissions, workshops, consulting</dd>
+                    <dt>Response</dt><dd>Within 48 hours</dd>
+                </dl>
             </div>
+
         </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section id="skills" class="block">
-        <div class="block-header">
-            <h2><b><i>Skills</i></b></h2>
-        </div>
-        <div class="block-content">
-            <p class="section-desc">I use these software tools in my work:</p>
-            <p class="tools-list">TouchDesigner, Unreal Engine, Unity, ComfyUI, Redis, Redshift, Davinci Resolve, Logic, Final Cut Pro, Adobe Suite (Illustrator, AE & Photoshop + extras) CLO3D & Blender</p>
-        </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="block">
-        <div class="block-header">
-            <h2><b>Get in Touch</b></h2>
-        </div>
-        <div class="block-content">
-            <p class="section-desc">Interested in a commission, collaboration, or just want to say hello? Fill out the form below and I'll get back to you.</p>
-            <form action="https://formsubmit.co/aristideslintzeris@gmail.com" method="POST" class="contact-form">
-                <input type="hidden" name="_subject" value="New inquiry from aristidesai.github.io">
-                <input type="hidden" name="_captcha" value="true">
-                <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_next" value="https://aristidesai.github.io/?submitted=true">
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="name">Name *</label>
-                        <input type="text" name="name" id="name" required placeholder="Your full name">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email *</label>
-                        <input type="email" name="email" id="email" required placeholder="you@example.com">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="company">Company / Organization</label>
-                        <input type="text" name="company" id="company" placeholder="Optional">
-                    </div>
-                    <div class="form-group">
-                        <label for="budget">Budget Range</label>
-                        <select name="budget" id="budget">
-                            <option value="" disabled selected>Select range</option>
-                            <option value="Under $500">Under $500</option>
-                            <option value="$500 - $1,000">$500 - $1,000</option>
-                            <option value="$1,000 - $5,000">$1,000 - $5,000</option>
-                            <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-                            <option value="$10,000+">$10,000+</option>
-                            <option value="Let's discuss">Let's discuss</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="reason">Reason for Contact *</label>
-                    <select name="reason" id="reason" required>
-                        <option value="" disabled selected>What can I help with?</option>
-                        <option value="Commission - AI Art / ComfyUI">Commission - AI Art / ComfyUI</option>
-                        <option value="Commission - TouchDesigner">Commission - TouchDesigner</option>
-                        <option value="Commission - Live Visuals / VJ">Commission - Live Visuals / VJ</option>
-                        <option value="Commission - 3D / Blender / CLO3D">Commission - 3D / Blender / CLO3D</option>
-                        <option value="Custom AI Workflow Development">Custom AI Workflow Development</option>
-                        <option value="Brand / Agency Collaboration">Brand / Agency Collaboration</option>
-                        <option value="Consulting / Strategy">Consulting / Strategy</option>
-                        <option value="Workshop / Speaking">Workshop / Speaking</option>
-                        <option value="iOS App Inquiry">iOS App Inquiry</option>
-                        <option value="General Question">General Question</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="timeline">Project Timeline</label>
-                    <select name="timeline" id="timeline">
-                        <option value="" disabled selected>When do you need this?</option>
-                        <option value="ASAP / Rush">ASAP / Rush</option>
-                        <option value="1-2 weeks">1-2 weeks</option>
-                        <option value="1 month">1 month</option>
-                        <option value="2-3 months">2-3 months</option>
-                        <option value="Flexible / Ongoing">Flexible / Ongoing</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="message">Project Details *</label>
-                    <textarea name="message" id="message" rows="5" required placeholder="Tell me about your project — what you're looking for, any references or inspiration, and anything else that would help me understand your vision."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="referral">How did you find me?</label>
-                    <select name="referral" id="referral">
-                        <option value="" disabled selected>Select one</option>
-                        <option value="Google Search">Google Search</option>
-                        <option value="Instagram">Instagram</option>
-                        <option value="YouTube">YouTube</option>
-                        <option value="GitHub">GitHub</option>
-                        <option value="Patreon">Patreon</option>
-                        <option value="Word of Mouth">Word of Mouth</option>
-                        <option value="AI Search (ChatGPT, Perplexity, etc.)">AI Search (ChatGPT, Perplexity, etc.)</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="form-submit">Send Message</button>
-            </form>
-            <div id="form-success" class="form-success" style="display:none;">
-                <p>Thanks for reaching out! I'll get back to you soon.</p>
-            </div>
-        </div>
-    </section>
+    </div>
 
 </main>
 
-<script async src="//www.instagram.com/embed.js"></script>
+<!-- ===== MOBILE PAGER ===== -->
+<div class="pager" aria-hidden="true">
+    <button class="pager__btn" data-step="-1" aria-label="Previous section">↑</button>
+    <button class="pager__btn" data-step="1" aria-label="Next section">↓</button>
+</div>
+
+<script src="app.js"></script>
 <script src="snake.js"></script>
 <script src="particles.js"></script>
-<script>
-    const toggle = document.getElementById('themeToggle');
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark') {
-        document.body.classList.add('dark');
-        toggle.textContent = 'light';
-    }
-    toggle.addEventListener('click', function() {
-        document.body.classList.toggle('dark');
-        const isDark = document.body.classList.contains('dark');
-        toggle.textContent = isDark ? 'light' : 'dark';
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
-
-    // Show success message if redirected back after form submit
-    if (new URLSearchParams(window.location.search).has('submitted')) {
-        var form = document.querySelector('.contact-form');
-        var success = document.getElementById('form-success');
-        if (form && success) {
-            form.style.display = 'none';
-            success.style.display = 'block';
-        }
-        history.replaceState(null, '', window.location.pathname);
-        document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-    }
-
-</script>
 
 </body>
 </html>
