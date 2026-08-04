@@ -539,6 +539,9 @@ img { max-width: 100%; display: block; }
 .row__tile--gh  { background: #24292f; font-size: .52rem; }
 .row__tile--bmc { background: #ffdd00; color: #141414; }
 .row__tile--doc { background: #0a66ff; }
+.row__tile--mail { background: var(--text-primary); color: var(--bg); font-size: .8rem; }
+.row__tile--img { background: none; padding: 0; overflow: hidden; }
+.row__tile--img img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 .row__name {
     font-size: .92rem;
     font-weight: 500;
@@ -798,6 +801,11 @@ img { max-width: 100%; display: block; }
     border-bottom: 1px solid var(--rule);
 }
 .meta dd:last-child { border-bottom: 0; }
+.meta dd a {
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    transition: color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.meta dd a:hover { color: var(--accent); border-color: var(--accent); }
 
 /* ==========================================================================
    MOBILE PAGER
