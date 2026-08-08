@@ -291,6 +291,15 @@ img { max-width: 100%; display: block; }
 }
 .statement em { font-style: normal; color: var(--accent); }
 
+/* the emoji scales with the headline rather than sitting at its 32px attrs */
+.alien img {
+    display: inline-block;
+    width: .82em;
+    height: .82em;
+    margin-left: .12em;
+    vertical-align: -.08em;
+}
+
 .statement__sub {
     margin-top: 26px;
     max-width: 30rem;
@@ -298,6 +307,47 @@ img { max-width: 100%; display: block; }
     line-height: 1.6;
     color: var(--text-secondary);
 }
+
+/* "New" announcement inside the index subtitle */
+.flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 14px;
+    padding: 6px 12px 6px 7px;
+    border-radius: 99px;
+    border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    transition: border-color 240ms var(--ease), background-color 240ms var(--ease);
+}
+.flag b {
+    flex: 0 0 auto;
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: .5rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+.flag span {
+    font-size: .8rem;
+    line-height: 1.35;
+    color: var(--text-primary);
+}
+.flag em {
+    font-style: normal;
+    color: var(--accent);
+    font-size: .78rem;
+    transition: transform 240ms var(--ease);
+}
+.flag:hover {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.flag:hover em { transform: translate(2px,-2px); }
 
 .toc {
     list-style: none;
