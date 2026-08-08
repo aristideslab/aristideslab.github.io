@@ -72,11 +72,15 @@
     function paintAccent(hue, dark) {
         var vivid = oklch(dark ? 0.76 : 0.66, 0.20, hue);
         var ink   = oklch(dark ? 0.80 : 0.46, 0.19, hue);
-        var root  = document.documentElement.style;
 
-        root.setProperty('--accent', 'rgb(' + vivid.join(' ') + ')');
-        root.setProperty('--accent-ink', 'rgb(' + ink.join(' ') + ')');
-        root.setProperty('--accent-on', dark ? '#0b0b0c' : '#ffffff');
+        // Must be set on <body>, not <html>: body.dark declares these same
+        // properties, and a declaration on the element itself beats a value
+        // inherited from its parent — so setting them on <html> would be
+        // silently overridden in dark mode. An inline style on <body> wins.
+        var el = document.body.style;
+        el.setProperty('--accent', 'rgb(' + vivid.join(' ') + ')');
+        el.setProperty('--accent-ink', 'rgb(' + ink.join(' ') + ')');
+        el.setProperty('--accent-on', dark ? '#0b0b0c' : '#ffffff');
 
         accentRGB = vivid;
     }
