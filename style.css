@@ -12,7 +12,17 @@
     --text-subtle:   #cbcac3;
     --rule:          #dedcd4;
     --rule-strong:   #c8c6bc;
-    --accent:        #e03c00;
+
+    /* Accent is re-rolled per section by app.js. Three tokens because one
+       hue can't do every job legibly on both grounds:
+         --accent      vivid — graphics only (points, borders, rules)
+         --accent-ink  contrast-safe — any text, and solid fills
+         --accent-on   foreground that sits on --accent-ink
+       Defaults here are the light-mode red; JS overwrites all three. */
+    --accent:        rgb(228 62 30);
+    --accent-ink:    rgb(186 34 8);
+    --accent-on:     #ffffff;
+    --accent-t:      440ms;
 
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Mono", "Roboto Mono", monospace;
@@ -32,7 +42,9 @@ body.dark {
     --text-subtle:   #45454a;
     --rule:          #232325;
     --rule-strong:   #35353a;
-    --accent:        #ff5f26;
+    --accent:        rgb(255 122 92);
+    --accent-ink:    rgb(255 138 110);
+    --accent-on:     #0b0b0c;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -58,6 +70,22 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 img { max-width: 100%; display: block; }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+/* The accent is re-rolled on every section change; ease the swap on the
+   elements that carry it so the hue crossfades with the content. */
+.title__eyebrow,
+.flag,
+.grp h3 em,
+.panel__cta,
+.dot,
+.viewer__ticks button,
+.submit,
+.success__mark {
+    transition: color var(--accent-t) var(--ease),
+                background-color var(--accent-t) var(--ease),
+                border-color var(--accent-t) var(--ease),
+                width 380ms var(--ease);
+}
 
 .skip-link {
     position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
@@ -93,26 +121,6 @@ img { max-width: 100%; display: block; }
     pointer-events: none;
 }
 .topbar > * { pointer-events: auto; }
-
-.wordmark {
-    display: flex; align-items: center; gap: 9px;
-    font-family: var(--font-mono);
-    font-size: .68rem;
-    letter-spacing: .2em;
-    color: var(--text-primary);
-}
-.wordmark__mark {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 3.4s var(--ease) infinite;
-}
-@keyframes pulse {
-    0%, 70%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent); }
-    35% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 0%, transparent); }
-}
-.wordmark__text em { font-style: normal; color: var(--text-muted); }
-.wordmark:hover .wordmark__text em { color: var(--accent); }
 
 .theme-toggle {
     display: flex; align-items: center; gap: 8px;
@@ -205,7 +213,7 @@ img { max-width: 100%; display: block; }
     font-size: .58rem;
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-ink);
     margin-bottom: 14px;
 }
 .title__main {
@@ -289,15 +297,17 @@ img { max-width: 100%; display: block; }
     letter-spacing: -.045em;
     color: var(--text-primary);
 }
-.statement em { font-style: normal; color: var(--accent); }
+.statement em { font-style: normal; color: var(--accent-ink); }
 
-/* the emoji scales with the headline rather than sitting at its 32px attrs */
+/* emoji tracks the headline's height instead of its 32px attributes, and .nb
+   keeps it welded to the final word so it can never wrap to its own line */
+.nb { white-space: nowrap; }
 .alien img {
     display: inline-block;
-    width: .82em;
-    height: .82em;
-    margin-left: .12em;
-    vertical-align: -.08em;
+    width: 1em;
+    height: 1em;
+    margin-left: .1em;
+    vertical-align: -.17em;
 }
 
 .statement__sub {
@@ -308,45 +318,11 @@ img { max-width: 100%; display: block; }
     color: var(--text-secondary);
 }
 
-/* "New" announcement inside the index subtitle */
-.flag {
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    margin-top: 14px;
-    padding: 6px 12px 6px 7px;
-    border-radius: 99px;
-    border: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
-    background: color-mix(in srgb, var(--accent) 8%, transparent);
-    transition: border-color 240ms var(--ease), background-color 240ms var(--ease);
-}
-.flag b {
-    flex: 0 0 auto;
-    padding: 3px 8px;
-    border-radius: 99px;
-    background: var(--accent);
-    color: #fff;
-    font-family: var(--font-mono);
-    font-size: .5rem;
-    font-weight: 600;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-}
-.flag span {
-    font-size: .8rem;
-    line-height: 1.35;
-    color: var(--text-primary);
-}
-.flag em {
-    font-style: normal;
-    color: var(--accent);
-    font-size: .78rem;
-    transition: transform 240ms var(--ease);
-}
-.flag:hover {
-    border-color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 14%, transparent);
-}
+/* "New" announcement inside the index subtitle — accent text, not a pill */
+.flag { color: var(--accent-ink); }
+.flag b { font-weight: 600; }
+.flag em { font-style: normal; display: inline-block; transition: transform 240ms var(--ease); }
+.flag:hover { text-decoration: underline; text-underline-offset: 3px; }
 .flag:hover em { transform: translate(2px,-2px); }
 
 .toc {
@@ -393,7 +369,7 @@ img { max-width: 100%; display: block; }
 }
 .toc button:hover { padding-left: 12px; border-color: var(--rule-strong); }
 .toc button:hover i,
-.toc button:hover em { color: var(--accent); }
+.toc button:hover em { color: var(--accent-ink); }
 .toc button:hover em { transform: translateX(4px); }
 
 /* ==========================================================================
@@ -483,7 +459,7 @@ img { max-width: 100%; display: block; }
     color: var(--text-muted);
     transition: color 200ms var(--ease);
 }
-.viewer__out:hover { color: var(--accent); }
+.viewer__out:hover { color: var(--accent-ink); }
 
 /* ==========================================================================
    FRAME 2 — app cards
@@ -539,7 +515,7 @@ img { max-width: 100%; display: block; }
     color: var(--text-muted);
     transition: color 220ms var(--ease);
 }
-.card:hover .card__cta { color: var(--accent); }
+.card:hover .card__cta { color: var(--accent-ink); }
 
 .subrow {
     display: flex;
@@ -557,7 +533,7 @@ img { max-width: 100%; display: block; }
     color: var(--text-muted);
     transition: color 200ms var(--ease);
 }
-.subrow a:hover { color: var(--accent); }
+.subrow a:hover { color: var(--accent-ink); }
 
 /* ==========================================================================
    FRAME 3 — link rows
@@ -589,6 +565,7 @@ img { max-width: 100%; display: block; }
 .row__tile--gh  { background: #24292f; font-size: .52rem; }
 .row__tile--bmc { background: #ffdd00; color: #141414; }
 .row__tile--doc { background: #0a66ff; }
+.row__tile--hf { background: #ffd21e; color: #141414; font-size: .8rem; }
 .row__tile--mail { background: var(--text-primary); color: var(--bg); font-size: .8rem; }
 .row__tile--img { background: none; padding: 0; overflow: hidden; }
 .row__tile--img img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
@@ -611,7 +588,7 @@ img { max-width: 100%; display: block; }
     font-size: .82rem;
     transition: color 240ms var(--ease), transform 240ms var(--ease);
 }
-.row:hover .row__go { color: var(--accent); transform: translate(3px,-3px); }
+.row:hover .row__go { color: var(--accent-ink); transform: translate(3px,-3px); }
 
 /* ==========================================================================
    FRAME 4 — skills spec sheet
@@ -629,7 +606,7 @@ img { max-width: 100%; display: block; }
     text-transform: uppercase;
     color: var(--text-primary);
 }
-.grp h3 em { font-style: normal; font-weight: 400; color: var(--accent); }
+.grp h3 em { font-style: normal; font-weight: 400; color: var(--accent-ink); }
 /* opt out of the uppercase run so "iOS" keeps its real casing */
 .grp h3 .kase { text-transform: none; letter-spacing: .1em; }
 .grp p {
@@ -655,7 +632,7 @@ img { max-width: 100%; display: block; }
     background: var(--card);
     transition: border-color 240ms var(--ease), color 240ms var(--ease);
 }
-.grp li:hover { border-color: var(--accent); color: var(--accent); }
+.grp li:hover { border-color: var(--accent-ink); color: var(--accent-ink); }
 
 /* ==========================================================================
    HIRE CTA — apps frame
@@ -691,7 +668,7 @@ img { max-width: 100%; display: block; }
     color: var(--text-subtle);
     transition: color 240ms var(--ease), transform 240ms var(--ease);
 }
-.hire:hover em { color: var(--accent); transform: translateX(4px); }
+.hire:hover em { color: var(--accent-ink); transform: translateX(4px); }
 
 /* ==========================================================================
    FRAME 5 — contact form
@@ -761,8 +738,8 @@ img { max-width: 100%; display: block; }
 .submit {
     padding: 11px 26px;
     border-radius: 99px;
-    background: var(--accent);
-    color: #fff;
+    background: var(--accent-ink);
+    color: var(--accent-on);
     font-size: .8rem;
     font-weight: 600;
     letter-spacing: -.01em;
@@ -777,8 +754,8 @@ img { max-width: 100%; display: block; }
     width: 50px; height: 50px;
     margin: 0 auto 18px;
     border-radius: 50%;
-    background: var(--accent);
-    color: #fff;
+    background: var(--accent-ink);
+    color: var(--accent-on);
     font-size: 1.4rem;
     display: flex; align-items: center; justify-content: center;
 }
@@ -824,7 +801,7 @@ img { max-width: 100%; display: block; }
     display: inline-block;
     font-size: .74rem;
     font-weight: 500;
-    color: var(--accent);
+    color: var(--accent-ink);
     border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
     padding-bottom: 2px;
     transition: border-color 200ms var(--ease);
@@ -855,7 +832,7 @@ img { max-width: 100%; display: block; }
     border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
     transition: color 200ms var(--ease), border-color 200ms var(--ease);
 }
-.meta dd a:hover { color: var(--accent); border-color: var(--accent); }
+.meta dd a:hover { color: var(--accent-ink); border-color: var(--accent-ink); }
 
 /* ==========================================================================
    MOBILE PAGER
@@ -884,7 +861,6 @@ img { max-width: 100%; display: block; }
     html, body { height: 100dvh; overflow: hidden; }
 
     .topbar { padding: 14px 16px 0; }
-    .wordmark { font-size: .6rem; letter-spacing: .16em; }
 
     .social-sidebar {
         left: 0; right: 0; top: auto; bottom: 0;
@@ -927,7 +903,8 @@ img { max-width: 100%; display: block; }
     }
     .frame.is-active { transform: none; }
 
-    .statement { font-size: clamp(2.2rem, 12vw, 3.2rem); }
+    .statement { font-size: clamp(2rem, 11vw, 3rem); }
+    .nb { white-space: normal; }          /* let the emoji wrap on narrow screens */
     .statement__sub { margin-top: 18px; font-size: .85rem; }
     .toc { margin-top: 26px; }
     .toc button { gap: 12px; padding: 11px 2px; flex-wrap: wrap; }
@@ -1002,7 +979,7 @@ img { max-width: 100%; display: block; }
     font-size: .58rem;
     letter-spacing: .2em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-ink);
     pointer-events: none;
 }
 
@@ -1040,5 +1017,5 @@ img { max-width: 100%; display: block; }
     text-align: center;
 }
 #snake-go-text { font-size: 1.1rem; font-weight: 600; letter-spacing: .3em; }
-#snake-go-score { font-size: .78rem; letter-spacing: .16em; color: var(--accent); }
+#snake-go-score { font-size: .78rem; letter-spacing: .16em; color: var(--accent-ink); }
 #snake-go-hint { font-size: .56rem; letter-spacing: .12em; color: var(--text-muted); }

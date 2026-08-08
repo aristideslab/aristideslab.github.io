@@ -16,6 +16,79 @@
     var locked = false;
 
     /* ---------------------------------------------------------------------
+       ACCENT ENGINE
+
+       Each section re-rolls the accent from a fixed set of hues. Hues are
+       specified in OKLCH because its lightness is perceptual: pinning every
+       hue to the same L means yellow and ultramarine end up equally legible,
+       which is not true in HSL. Muddy hues (brown/beige/cream are simply low
+       chroma at low lightness) never appear because chroma is held high and
+       lightness is fixed per theme.
+
+       Three outputs per roll:
+         vivid  graphics only — field points, dots, borders, focus rings
+         ink    text and solid fills; darker on light ground, lighter on dark
+         on     foreground for anything sitting on `ink`
+       --------------------------------------------------------------------- */
+    var HUES = [
+        { name: 'red',         h: 27  },
+        { name: 'orange',      h: 55  },
+        { name: 'yellow',      h: 96  },
+        { name: 'green',       h: 145 },
+        { name: 'emerald',     h: 168 },
+        { name: 'cyan',        h: 215 },
+        { name: 'ultramarine', h: 264 },
+        { name: 'violet',      h: 292 },
+        { name: 'purple',      h: 315 },
+        { name: 'pink',        h: 350 }
+    ];
+
+    // OKLCH -> sRGB. Done here rather than leaning on css oklch() so the same
+    // numbers drive the canvas, where per-point alpha is needed.
+    function oklch(L, C, Hdeg) {
+        var hr = Hdeg * Math.PI / 180;
+        var a = C * Math.cos(hr), b = C * Math.sin(hr);
+
+        var l_ = L + 0.3963377774 * a + 0.2158037573 * b;
+        var m_ = L - 0.1055613458 * a - 0.0638541728 * b;
+        var s_ = L - 0.0894841775 * a - 1.2914855480 * b;
+        var l = l_ * l_ * l_, m = m_ * m_ * m_, s = s_ * s_ * s_;
+
+        var lin = [
+             4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+            -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+            -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+        ];
+
+        return lin.map(function (v) {
+            v = v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(Math.max(v, 0), 1 / 2.4) - 0.055;
+            return Math.max(0, Math.min(255, Math.round(v * 255)));
+        });
+    }
+
+    var accentRGB = [224, 60, 0];          // vivid, as [r,g,b] for the canvas
+    var hueIndex = -1;
+
+    function paintAccent(hue, dark) {
+        var vivid = oklch(dark ? 0.76 : 0.66, 0.20, hue);
+        var ink   = oklch(dark ? 0.80 : 0.46, 0.19, hue);
+        var root  = document.documentElement.style;
+
+        root.setProperty('--accent', 'rgb(' + vivid.join(' ') + ')');
+        root.setProperty('--accent-ink', 'rgb(' + ink.join(' ') + ')');
+        root.setProperty('--accent-on', dark ? '#0b0b0c' : '#ffffff');
+
+        accentRGB = vivid;
+    }
+
+    function rollAccent() {
+        var next = hueIndex;
+        while (next === hueIndex) next = Math.floor(Math.random() * HUES.length);
+        hueIndex = next;
+        paintAccent(HUES[hueIndex].h, document.body.classList.contains('dark'));
+    }
+
+    /* ---------------------------------------------------------------------
        Section switching
        --------------------------------------------------------------------- */
     function setInert(el, off) {
@@ -29,6 +102,7 @@
         current = index;
 
         document.body.setAttribute('data-section', String(index));
+        rollAccent();
 
         [titles, frames, panels].forEach(function (group) {
             group.forEach(function (el, i) {
@@ -210,6 +284,8 @@
         label.textContent = dark ? 'light' : 'dark';
         toggle.setAttribute('aria-pressed', dark ? 'true' : 'false');
         toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+        // lightness targets differ per ground, so re-derive rather than reuse
+        if (hueIndex >= 0) paintAccent(HUES[hueIndex].h, dark);
     }
 
     var saved = null;
@@ -269,9 +345,10 @@
 
         function palette() {
             var dark = document.body.classList.contains('dark');
+            var acc = accentRGB.join(',');           // follows the section's roll
             return dark
-                ? { dot: '226,229,238', acc: '255,95,38', base: 0.32, hi: 0.66 }
-                : { dot: '23,23,26',    acc: '224,60,0',  base: 0.24, hi: 0.50 };
+                ? { dot: '226,229,238', acc: acc, base: 0.32, hi: 0.66 }
+                : { dot: '23,23,26',    acc: acc, base: 0.24, hi: 0.50 };
         }
 
         function draw() {

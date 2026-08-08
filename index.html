@@ -57,10 +57,6 @@
 
 <!-- ===== TOP BAR ===== -->
 <header class="topbar">
-    <a class="wordmark" href="#index" data-goto="0">
-        <span class="wordmark__mark" aria-hidden="true"></span>
-        <span class="wordmark__text">ARISTIDES<em>LAB</em></span>
-    </a>
     <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" aria-pressed="false">
         <span class="theme-toggle__dot" aria-hidden="true"></span>
         <span class="theme-toggle__label">dark</span>
@@ -87,7 +83,7 @@
         <div class="titles">
             <div class="title" data-title="0">
                 <p class="title__eyebrow">00 / Index</p>
-                <h1 class="title__main"><span>Aristides</span> <span>Lintzeris</span></h1>
+                <h1 class="title__main"><span>Aristides</span></h1>
                 <p class="title__sub">Lab</p>
             </div>
             <div class="title" data-title="1">
@@ -136,13 +132,9 @@
 
             <!-- FRAME 0 — INDEX -->
             <section class="frame frame--index" data-frame="0" aria-label="Index">
-                <p class="statement">I make things<picture class="alien"><source media="(prefers-reduced-motion: reduce)" srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f47d/emoji.svg" type="image/svg+xml"><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f47d/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f47d/512.gif" alt="👽" width="32" height="32" decoding="async"></picture></p>
-                <p class="statement__sub">I make things, I am a bad painter and iOS developer. TouchDesigner installations and custom operators, procedural 3D in Blender, and native iOS apps.
-                    <a class="flag" href="https://huggingface.co/a-ml/FaceDepth" target="_blank" rel="noopener">
-                        <b>New</b>
-                        <span>My face-specialized monocular depth estimation model</span>
-                        <em aria-hidden="true">↗</em>
-                    </a>
+                <p class="statement">I make <span class="nb">things<picture class="alien"><source media="(prefers-reduced-motion: reduce)" srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f47d/emoji.svg" type="image/svg+xml"><source srcset="https://fonts.gstatic.com/s/e/notoemoji/latest/1f47d/512.webp" type="image/webp"><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f47d/512.gif" alt="👽" width="32" height="32" decoding="async"></picture></span></p>
+                <p class="statement__sub">I make things, I am a bad painter and iOS developer, digital stuff, tools for creatives.
+                    <a class="flag" href="https://huggingface.co/a-ml/FaceDepth" target="_blank" rel="noopener"><b>New:</b> My face-specialized monocular depth estimation model <em aria-hidden="true">↗</em></a>
                 </p>
                 <ol class="toc">
                     <li><button data-goto="1"><i>01</i><b>Portfolio</b><span>Reels &amp; breakdowns</span><em>→</em></button></li>
@@ -228,6 +220,12 @@
                         <span class="row__tile row__tile--mail">@</span>
                         <span class="row__name">Email</span>
                         <span class="row__sub">aristides.lab@proton.me</span>
+                        <span class="row__go" aria-hidden="true">↗</span>
+                    </a>
+                    <a class="row" href="https://huggingface.co/a-ml/FaceDepth" target="_blank" rel="noopener">
+                        <span class="row__tile row__tile--hf">🤗</span>
+                        <span class="row__name">FaceDepth</span>
+                        <span class="row__sub">Face-specialized monocular depth model</span>
                         <span class="row__go" aria-hidden="true">↗</span>
                     </a>
                     <a class="row" href="https://tdlidar.github.io/" target="_blank" rel="noopener">
@@ -433,13 +431,7 @@
         <div class="panels">
 
             <div class="panel" data-panel="0">
-                <p class="panel__lede">Immersive experiences and technical rendering.</p>
-                <p class="panel__body">Commissions are open — installations, live visuals, procedural 3D, and custom iOS apps built from scratch.</p>
-                <a class="panel__cta" href="https://www.patreon.com/cw/aristideslab" target="_blank" rel="noopener">Support my work ↗</a>
-                <dl class="meta">
-                    <dt>Based</dt><dd>Working worldwide</dd>
-                    <dt>Response</dt><dd>Within 48 hours</dd>
-                </dl>
+                <p class="panel__lede">Commissions are open — installations, live visuals, and custom iOS apps built from scratch.</p>
             </div>
 
             <div class="panel" data-panel="1">
