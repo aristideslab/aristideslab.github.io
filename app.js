@@ -85,10 +85,28 @@
         accentRGB = vivid;
     }
 
+    // Draw from a shuffled bag rather than picking at random each time. Pure
+    // random repeats far more than people expect — six sections would often
+    // show the same hue two or three times. A bag guarantees all ten appear
+    // before any repeats, and the refill never starts on the colour it ended
+    // with, so consecutive sections are always different.
+    var bag = [];
+
+    function refillBag() {
+        var last = bag.length === 0 && hueIndex >= 0 ? hueIndex : -1;
+        bag = HUES.map(function (_, i) { return i; });
+        for (var i = bag.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = bag[i]; bag[i] = bag[j]; bag[j] = t;
+        }
+        if (bag[bag.length - 1] === last) {           // pop() takes from the end
+            bag.push(bag.shift());
+        }
+    }
+
     function rollAccent() {
-        var next = hueIndex;
-        while (next === hueIndex) next = Math.floor(Math.random() * HUES.length);
-        hueIndex = next;
+        if (!bag.length) refillBag();
+        hueIndex = bag.pop();
         paintAccent(HUES[hueIndex].h, document.body.classList.contains('dark'));
     }
 
@@ -122,7 +140,7 @@
             else d.removeAttribute('aria-current');
         });
 
-        if (index === 1) showReel(reelIndex, true);
+        if (index === 1) Feed.reveal();
 
         if (!fromHash) {
             var hash = '#' + SECTIONS[index];
@@ -163,6 +181,13 @@
 
     window.addEventListener('wheel', function (e) {
         var dir = e.deltaY > 0 ? 1 : -1;
+        if (Feed.isInside && Feed.isInside(e.target)) {
+            if (Feed.wheel(e.deltaY)) { e.preventDefault(); return; }   // consumed
+            e.preventDefault();                                          // at an end -> page
+            if (locked) return;
+            locked = true; setTimeout(function () { locked = false; }, 600);
+            step(dir); return;
+        }
         if (scrollableAncestor(e.target, dir)) return;
         e.preventDefault();
         if (locked) return;
@@ -188,8 +213,8 @@
             case 'ArrowUp':   case 'PageUp':   case 'k': e.preventDefault(); step(-1); break;
             case 'Home': e.preventDefault(); go(0); break;
             case 'End':  e.preventDefault(); go(SECTIONS.length - 1); break;
-            case 'ArrowLeft':  if (current === 1) { e.preventDefault(); showReel(reelIndex - 1, true); } break;
-            case 'ArrowRight': if (current === 1) { e.preventDefault(); showReel(reelIndex + 1, true); } break;
+            case 'ArrowLeft':  if (current === 1) { e.preventDefault(); Feed.step(-1); } break;
+            case 'ArrowRight': if (current === 1) { e.preventDefault(); Feed.step(1); } break;
         }
     });
 
@@ -207,7 +232,8 @@
         if (touchY === null) return;
         var dy = touchY - e.touches[0].clientY;
         if (touchScrollable === null) {
-            touchScrollable = scrollableAncestor(e.target, dy > 0 ? 1 : -1) ? true : false;
+            touchScrollable = (Feed.isInside && Feed.isInside(e.target)) ||
+                              !!scrollableAncestor(e.target, dy > 0 ? 1 : -1);
         }
         if (touchScrollable) return;
         if (locked || Math.abs(dy) < 52) return;
@@ -229,11 +255,8 @@
         var stepEl = e.target.closest('[data-step]');
         if (stepEl) { e.preventDefault(); step(parseInt(stepEl.getAttribute('data-step'), 10)); return; }
 
-        if (e.target.closest('[data-reel-next]')) { showReel(reelIndex + 1, true); return; }
-        if (e.target.closest('[data-reel-prev]')) { showReel(reelIndex - 1, true); return; }
-
-        var tick = e.target.closest('[data-reel-go]');
-        if (tick) { showReel(parseInt(tick.getAttribute('data-reel-go'), 10), true); return; }
+        if (e.target.closest('[data-reel-next]')) { Feed.step(1); return; }
+        if (e.target.closest('[data-reel-prev]')) { Feed.step(-1); return; }
     });
 
     titles.forEach(function (t, i) {
@@ -241,41 +264,159 @@
     });
 
     /* ---------------------------------------------------------------------
-       Instagram reels — lazy iframes
+       REEL FEED
+
+       A phone-shaped viewport holding a vertical stack of Instagram embeds,
+       driven by a hand-rolled momentum scroller rather than native overflow.
+       Native scrolling gives inertia on trackpads but steps rigidly for mouse
+       wheels; this integrates wheel, drag and touch into one velocity so all
+       three feel the same, then eases to the nearest reel once the velocity
+       decays. The feed reports when it is pinned at an end so the page can
+       take the gesture back and move to the next section.
        --------------------------------------------------------------------- */
-    var reelEls = Array.prototype.slice.call(document.querySelectorAll('.reel'));
-    var reelTicks = Array.prototype.slice.call(document.querySelectorAll('[data-reel-go]'));
-    var reelIndex = 0;
+    var Feed = (function () {
+        var screenEl = document.querySelector('.phone__screen');
+        var track    = document.getElementById('feed');
+        if (!screenEl || !track) return { wheel: function () { return false; }, reveal: function () {} };
 
-    function loadReel(i) {
-        var el = reelEls[i];
-        if (!el || el.dataset.loaded) return;
-        el.dataset.loaded = '1';
-        var frame = document.createElement('iframe');
-        frame.src = 'https://www.instagram.com/reel/' + el.getAttribute('data-reel') + '/embed/';
-        frame.setAttribute('title', 'Instagram reel by @aristides.lab');
-        frame.setAttribute('loading', 'lazy');
-        frame.setAttribute('scrolling', 'no');
-        frame.addEventListener('load', function () { el.classList.add('is-loaded'); });
-        el.querySelector('.reel__crop').appendChild(frame);
-    }
+        var slides = Array.prototype.slice.call(track.querySelectorAll('.slide'));
+        var counter = document.getElementById('reelIndex');
+        var thumb = document.getElementById('railThumb');
 
-    // allowLoad stays false until the portfolio section is reached, so no
-    // Instagram iframes are fetched on first paint.
-    function showReel(i, allowLoad) {
-        reelIndex = (i + reelEls.length) % reelEls.length;
-        reelEls.forEach(function (el, n) { el.classList.toggle('is-active', n === reelIndex); });
-        reelTicks.forEach(function (b, n) {
-            if (n === reelIndex) b.setAttribute('aria-current', 'true');
-            else b.removeAttribute('aria-current');
-        });
-        if (allowLoad) {
-            loadReel(reelIndex);
-            loadReel((reelIndex + 1) % reelEls.length);   // prefetch the next
+        var H = 0, maxY = 0;
+        var y = 0, vel = 0, raf = null;
+        var snapping = false, dragging = false, revealed = false;
+        var lastY = 0, lastT = 0;
+        var index = 0;
+
+        var FRICTION = 0.935;   // per frame decay
+        var SNAP = 0.16;        // easing toward the nearest reel
+        var STOP = 0.5;         // velocity below which we start snapping
+
+        function measure() {
+            H = screenEl.clientHeight || 1;
+            maxY = Math.max(0, (slides.length - 1) * H);
+            y = Math.min(y, maxY);
+            apply();
         }
-    }
 
-    showReel(0, false);
+        function apply() {
+            track.style.transform = 'translate3d(0,' + (-y).toFixed(2) + 'px,0)';
+            var i = Math.max(0, Math.min(slides.length - 1, Math.round(y / H)));
+            if (i !== index) { index = i; mount(); }
+            if (counter) counter.textContent = String(index + 1);
+            if (thumb) {
+                thumb.style.height = (100 / slides.length) + '%';
+                thumb.style.transform = 'translateY(' + (y / H * 100) + '%)';
+            }
+        }
+
+        // only build iframes around the current reel, so opening the section
+        // does not fire eleven Instagram requests at once
+        function mount() {
+            if (!revealed) return;
+            for (var i = index - 1; i <= index + 1; i++) {
+                var el = slides[i];
+                if (!el || el.dataset.loaded) continue;
+                el.dataset.loaded = '1';
+                var f = document.createElement('iframe');
+                f.src = 'https://www.instagram.com/reel/' + el.getAttribute('data-code') + '/embed/';
+                f.setAttribute('title', 'Instagram reel by @aristides.lab');
+                f.setAttribute('loading', 'lazy');
+                f.setAttribute('scrolling', 'no');
+                f.addEventListener('load', function () { this.parentNode.classList.add('is-loaded'); });
+                el.appendChild(f);
+            }
+        }
+
+        function loop() {
+            if (dragging) { raf = requestAnimationFrame(loop); return; }
+
+            if (snapping) {
+                var target = Math.round(y / H) * H;
+                y += (target - y) * SNAP;
+                if (Math.abs(target - y) < 0.4) {
+                    y = target; snapping = false; apply();
+                    raf = null; return;
+                }
+            } else {
+                y += vel;
+                if (y < 0) { y = 0; vel = 0; }
+                if (y > maxY) { y = maxY; vel = 0; }
+                vel *= FRICTION;
+                if (Math.abs(vel) < STOP) { vel = 0; snapping = true; }
+            }
+            apply();
+            raf = requestAnimationFrame(loop);
+        }
+
+        function kick() { if (!raf) raf = requestAnimationFrame(loop); }
+
+        function atTop()    { return y <= 0.5; }
+        function atBottom() { return y >= maxY - 0.5; }
+
+        function wheel(delta) {
+            if (!H) measure();
+            // hand the gesture back to the page at either end
+            if ((delta < 0 && atTop()) || (delta > 0 && atBottom())) return false;
+            snapping = false;
+            vel += delta * 0.20;
+            vel = Math.max(-90, Math.min(90, vel));
+            kick();
+            return true;
+        }
+
+        function goTo(i) {
+            index = Math.max(0, Math.min(slides.length - 1, i));
+            vel = 0; snapping = true; kick(); mount();
+            y += (index * H - y) * 0.001;   // nudge so the snap targets the new index
+            y = index * H; apply();
+        }
+
+        function step(d) { goTo(Math.round(y / H) + d); }
+
+        /* --- drag / touch --- */
+        function down(e) {
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            dragging = true; vel = 0; snapping = false;
+            lastY = e.clientY; lastT = e.timeStamp;
+            screenEl.setPointerCapture(e.pointerId);
+            kick();
+        }
+        function move(e) {
+            if (!dragging) return;
+            var dy = e.clientY - lastY;
+            var dt = Math.max(1, e.timeStamp - lastT);
+            y = Math.max(-H * 0.15, Math.min(maxY + H * 0.15, y - dy));
+            vel = -dy / dt * 16;                       // px per frame
+            lastY = e.clientY; lastT = e.timeStamp;
+            apply();
+            e.preventDefault();
+        }
+        function up(e) {
+            if (!dragging) return;
+            dragging = false;
+            if (screenEl.hasPointerCapture(e.pointerId)) screenEl.releasePointerCapture(e.pointerId);
+            if (Math.abs(vel) < 1.2) { vel = 0; snapping = true; }
+            vel = Math.max(-90, Math.min(90, vel));
+            kick();
+        }
+
+        screenEl.addEventListener('pointerdown', down);
+        screenEl.addEventListener('pointermove', move);
+        screenEl.addEventListener('pointerup', up);
+        screenEl.addEventListener('pointercancel', up);
+        screenEl.addEventListener('dragstart', function (e) { e.preventDefault(); });
+
+        window.addEventListener('resize', measure);
+
+        return {
+            wheel: wheel,
+            step: step,
+            reveal: function () { revealed = true; measure(); mount(); },
+            isInside: function (node) { return screenEl.contains(node); }
+        };
+    })();
 
     /* ---------------------------------------------------------------------
        Theme

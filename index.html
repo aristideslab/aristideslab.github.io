@@ -147,21 +147,30 @@
 
             <!-- FRAME 1 — PORTFOLIO -->
             <section class="frame frame--reels" data-frame="1" aria-label="Portfolio reels">
-                <div class="viewer">
-                    <div class="reel" data-reel="DZ8HZV3SOWS"><div class="reel__crop"></div></div>
-                    <div class="reel" data-reel="DZ4pu_zBjV5"><div class="reel__crop"></div></div>
-                    <div class="reel" data-reel="DZumeDfzRwq"><div class="reel__crop"></div></div>
-                    <div class="reel" data-reel="DZtHdUvSpV2"><div class="reel__crop"></div></div>
-                </div>
-                <div class="viewer__nav">
-                    <button class="viewer__btn" data-reel-prev aria-label="Previous reel">←</button>
-                    <div class="viewer__ticks">
-                        <button data-reel-go="0" aria-label="Reel 1" aria-current="true"></button>
-                        <button data-reel-go="1" aria-label="Reel 2"></button>
-                        <button data-reel-go="2" aria-label="Reel 3"></button>
-                        <button data-reel-go="3" aria-label="Reel 4"></button>
+                <div class="phone" id="phone">
+                    <div class="phone__screen">
+                        <!-- Order: the three pinned reels first, then newest-first. -->
+                        <div class="feed" id="feed">
+                            <div class="slide" data-code="DaHOthUpwWA" data-pin="1"></div>
+                            <div class="slide" data-code="DamiBmcP2RI" data-pin="1"></div>
+                            <div class="slide" data-code="DWK0dZUEoMD" data-pin="1"></div>
+                            <div class="slide" data-code="Dbs22KPgACe"></div>
+                            <div class="slide" data-code="DbmluuMPSSI"></div>
+                            <div class="slide" data-code="DbmqtEqhooY"></div>
+                            <div class="slide" data-code="DbfmEvtv28d"></div>
+                            <div class="slide" data-code="DbcOtyAPLtB"></div>
+                            <div class="slide" data-code="DbW2yWVPUSr"></div>
+                            <div class="slide" data-code="DbTCB0xPfQw"></div>
+                            <div class="slide" data-code="DbP0rZeJUOO"></div>
+                        </div>
+                        <div class="phone__rail" aria-hidden="true"><i id="railThumb"></i></div>
                     </div>
-                    <button class="viewer__btn" data-reel-next aria-label="Next reel">→</button>
+                </div>
+                <p class="phone__hint" aria-hidden="true">scroll or drag</p>
+                <div class="viewer__nav">
+                    <button class="viewer__btn" data-reel-prev aria-label="Previous reel">↑</button>
+                    <span class="viewer__count"><b id="reelIndex">1</b><i>/</i><span id="reelTotal">11</span></span>
+                    <button class="viewer__btn" data-reel-next aria-label="Next reel">↓</button>
                 </div>
                 <a class="viewer__out" href="https://www.instagram.com/aristides.lab/" target="_blank" rel="noopener">Open @aristides.lab on Instagram ↗</a>
             </section>

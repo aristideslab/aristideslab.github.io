@@ -23,6 +23,7 @@
     --accent-ink:    rgb(186 34 8);
     --accent-on:     #ffffff;
     --accent-t:      440ms;
+    --frame-shell:   #17171a;
 
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Mono", "Roboto Mono", monospace;
@@ -45,6 +46,7 @@ body.dark {
     --accent:        rgb(255 122 92);
     --accent-ink:    rgb(255 138 110);
     --accent-on:     #0b0b0c;
+    --frame-shell:   #0f0f11;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -376,60 +378,106 @@ img { max-width: 100%; display: block; }
    FRAME 1 — reel viewer
    ========================================================================== */
 .frame--reels {
-    max-width: 340px;
+    max-width: 330px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 18px;
+    gap: 16px;
 }
 
-.viewer {
+/* The phone viewport. `container-type: size` lets each slide and its iframe be
+   sized from the screen's height in cqh, so the embed's media box always
+   exactly fills a slide with no letterboxing and no JS measurement. */
+.phone {
+    padding: 8px;
+    border-radius: 40px;
+    background: var(--frame-shell, #17171a);
+    box-shadow: 0 34px 70px -30px rgba(20,18,14,.5),
+                inset 0 0 0 1px rgba(255,255,255,.08);
+}
+/* 9:16 so the reel's own video — which the embed pillarboxes inside a 100:124
+   media box — ends up exactly as wide as the screen. Height leads so the phone
+   shrinks on short viewports instead of overflowing. */
+.phone__screen {
     position: relative;
-    width: 100%;
-    aspect-ratio: 100 / 124;
-    border-radius: 18px;
+    height: min(56vh, 520px);
+    aspect-ratio: 9 / 16;
+    container-type: size;
+    border-radius: 33px;
     overflow: hidden;
     background: #0b0b0d;
-    box-shadow: 0 30px 60px -28px rgba(20,18,14,.42), inset 0 0 0 1px rgba(255,255,255,.06);
+    cursor: grab;
+    touch-action: none;          /* the momentum scroller owns the gesture */
+    user-select: none;
+    -webkit-user-select: none;
 }
+.phone__screen:active { cursor: grabbing; }
 
-/* Instagram embeds ship a white header and a comment bar we don't want.
-   --ig-head / --ig-foot crop them off so only the media shows. */
-.reel {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 420ms var(--ease);
+.feed { position: absolute; top: 0; left: 0; width: 100%; will-change: transform; }
+
+.slide {
+    position: relative;
+    width: 100%;
+    height: 100cqh;
+    overflow: hidden;
+    background: #0b0b0d;
     --ig-head: 56px;
     --ig-foot: 128px;
 }
-.reel.is-active { opacity: 1; pointer-events: auto; }
-.reel__crop { position: absolute; inset: 0; overflow: hidden; }
-.reel iframe {
+/* width is derived from height so the embed's 100:124 media box covers the
+   slide exactly; the cropped chrome sits outside the overflow */
+.slide iframe {
     position: absolute;
     top: calc(-1 * var(--ig-head));
-    left: 0;
-    width: 100%;
-    height: calc(100% + var(--ig-head) + var(--ig-foot));
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100cqh / 1.24);
+    height: calc(100cqh + var(--ig-head) + var(--ig-foot));
     border: 0;
     display: block;
+    pointer-events: none;        /* drags belong to the feed, not the embed */
 }
-.reel::after {
+.slide::after {
     content: "";
     position: absolute; top: 50%; left: 50%;
-    width: 26px; height: 26px; margin: -13px 0 0 -13px;
+    width: 24px; height: 24px; margin: -12px 0 0 -12px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,.2);
-    border-top-color: rgba(255,255,255,.9);
+    border: 2px solid rgba(255,255,255,.18);
+    border-top-color: rgba(255,255,255,.85);
     animation: spin 900ms linear infinite;
-    pointer-events: none;
     transition: opacity 300ms var(--ease);
 }
-.reel.is-loaded::after { opacity: 0; }
+.slide.is-loaded::after { opacity: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.viewer__nav { display: flex; align-items: center; gap: 18px; }
+.phone__rail {
+    position: absolute;
+    top: 10px; bottom: 10px; right: 5px;
+    width: 3px;
+    border-radius: 3px;
+    background: rgba(255,255,255,.08);
+    overflow: hidden;
+    z-index: 3;
+}
+.phone__rail i {
+    display: block;
+    width: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+    transition: background-color var(--accent-t) var(--ease);
+}
+
+.phone__hint {
+    margin: -4px 0 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: .5rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+}
+
+.viewer__nav { display: flex; align-items: center; gap: 16px; }
 .viewer__btn {
     width: 30px; height: 30px;
     border-radius: 50%;
@@ -441,15 +489,16 @@ img { max-width: 100%; display: block; }
 }
 .viewer__btn:hover { color: var(--text-primary); border-color: var(--rule-strong); }
 
-.viewer__ticks { display: flex; gap: 6px; }
-.viewer__ticks button {
-    width: 7px; height: 2px;
-    border-radius: 2px;
-    background: var(--text-subtle);
-    padding: 0;
-    transition: width 320ms var(--ease), background-color 320ms var(--ease);
+.viewer__count {
+    font-family: var(--font-mono);
+    font-size: .6rem;
+    letter-spacing: .1em;
+    color: var(--text-muted);
+    min-width: 42px;
+    text-align: center;
 }
-.viewer__ticks button[aria-current="true"] { width: 20px; background: var(--accent); }
+.viewer__count b { color: var(--text-primary); font-weight: 500; }
+.viewer__count i { font-style: normal; margin: 0 2px; }
 
 .viewer__out {
     font-family: var(--font-mono);
@@ -911,7 +960,8 @@ img { max-width: 100%; display: block; }
     .toc em { order: 2; margin-left: auto; }
     .toc span { flex-basis: 100%; order: 3; font-size: .68rem; margin-top: 3px; }
 
-    .frame--reels { max-width: 320px; margin: 0 auto; }
+    .frame--reels { max-width: 300px; margin: 0 auto; }
+    .phone__hint { display: none; }
 
     .cards { grid-template-columns: 1fr; }
     .card { padding: 14px; }
