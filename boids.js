@@ -122,6 +122,13 @@
     var SEP_R2 = 17 * 17, NEI_R2 = 42 * 42;
     var MAXV = 2.4, MINV = 0.65;
 
+    // Global timescale. Applied to acceleration, integration and the wander
+    // phase together, so it stretches time rather than just shortening each
+    // step — the flock traces the same paths, it simply takes twice as long to
+    // trace them. Scaling only the position step would keep the turn rate per
+    // frame and make the paths tighter and curlier instead of slower.
+    var DT = 0.5;
+
     function stepSim(t) {
         buildGrid();
 
@@ -156,7 +163,7 @@
             }
 
             // per-boid wander keeps the flock from settling into a steady state
-            wander[i] += 0.045;
+            wander[i] += 0.045 * DT;
             ax += Math.cos(wander[i]) * 0.035;
             ay += Math.sin(wander[i]) * 0.035;
 
@@ -172,13 +179,13 @@
 
             if (burst) { burstForce(i, x, y); ax += bfx; ay += bfy; }
 
-            vx[i] += ax; vy[i] += ay;
+            vx[i] += ax * DT; vy[i] += ay * DT;
 
             var sp = Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i]);
             if (sp > MAXV) { vx[i] *= MAXV / sp; vy[i] *= MAXV / sp; }
             else if (sp < MINV && sp > 0) { vx[i] *= MINV / sp; vy[i] *= MINV / sp; }
 
-            x += vx[i]; y += vy[i];
+            x += vx[i] * DT; y += vy[i] * DT;
             if (x < -8) x += W + 16; else if (x > W + 8) x -= W + 16;
             if (y < -8) y += H + 16; else if (y > H + 8) y -= H + 16;
             px[i] = x; py[i] = y;
@@ -516,6 +523,14 @@
 
     window.addEventListener('lab:trail', function (e) { trail = e.detail.value; });
 
-    window.LabField = { burst: fireBurst };
+    window.LabField = {
+        burst: fireBurst,
+        // mean on-screen displacement per frame, in CSS pixels
+        speed: function () {
+            var sum = 0;
+            for (var i = 0; i < N; i++) sum += Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i]);
+            return (sum / N) * DT;
+        }
+    };
 
 })();
