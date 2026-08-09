@@ -300,6 +300,13 @@
             apply();
         }
 
+        var idleTimer = null;
+        function markScrolling() {
+            screenEl.classList.add('is-scrolling');
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(function () { screenEl.classList.remove('is-scrolling'); }, 700);
+        }
+
         function apply() {
             track.style.transform = 'translate3d(0,' + (-y).toFixed(2) + 'px,0)';
             var i = Math.max(0, Math.min(slides.length - 1, Math.round(y / H)));
@@ -360,6 +367,7 @@
             // hand the gesture back to the page at either end
             if ((delta < 0 && atTop()) || (delta > 0 && atBottom())) return false;
             snapping = false;
+            markScrolling();
             vel += delta * 0.20;
             vel = Math.max(-90, Math.min(90, vel));
             kick();
@@ -379,6 +387,7 @@
         function down(e) {
             if (e.pointerType === 'mouse' && e.button !== 0) return;
             dragging = true; vel = 0; snapping = false;
+            markScrolling();
             lastY = e.clientY; lastT = e.timeStamp;
             screenEl.setPointerCapture(e.pointerId);
             kick();
@@ -416,6 +425,33 @@
             reveal: function () { revealed = true; measure(); mount(); },
             isInside: function (node) { return screenEl.contains(node); }
         };
+    })();
+
+    /* ---------------------------------------------------------------------
+       Status bar clock — real browser time, formatted the way iOS does it:
+       the locale's own hour cycle with the AM/PM marker dropped.
+       --------------------------------------------------------------------- */
+    (function clock() {
+        var el = document.getElementById('clock');
+        if (!el) return;
+        var fmt;
+        try { fmt = new Intl.DateTimeFormat([], { hour: 'numeric', minute: '2-digit' }); } catch (e) {}
+
+        function tick() {
+            var d = new Date(), out;
+            if (fmt) {
+                out = fmt.format(d)
+                    .replace(/[  ]/g, ' ')
+                    .replace(/\s*[APap]\.?\s?[Mm]\.?\s*$/, '')
+                    .trim();
+            } else {
+                var h = d.getHours() % 12; if (h === 0) h = 12;
+                out = h + ':' + String(d.getMinutes()).padStart(2, '0');
+            }
+            el.textContent = out;
+        }
+        tick();
+        setInterval(tick, 10000);
     })();
 
     /* ---------------------------------------------------------------------

@@ -388,13 +388,35 @@ img { max-width: 100%; display: block; }
 /* The phone viewport. `container-type: size` lets each slide and its iframe be
    sized from the screen's height in cqh, so the embed's media box always
    exactly fills a slide with no letterboxing and no JS measurement. */
+/* iPhone 17 silhouette. Every hardware detail is sized in container units off
+   the screen, so the whole device scales as one when the viewport changes. */
 .phone {
-    padding: 8px;
-    border-radius: 40px;
-    background: var(--frame-shell, #17171a);
+    position: relative;
+    padding: 9px;
+    border-radius: 46px;
+    background:
+        linear-gradient(150deg,
+            color-mix(in srgb, var(--frame-shell) 74%, #ffffff) 0%,
+            var(--frame-shell) 22%,
+            var(--frame-shell) 78%,
+            color-mix(in srgb, var(--frame-shell) 82%, #ffffff) 100%);
     box-shadow: 0 34px 70px -30px rgba(20,18,14,.5),
-                inset 0 0 0 1px rgba(255,255,255,.08);
+                inset 0 0 0 1px rgba(255,255,255,.16),
+                inset 0 0 0 3px rgba(0,0,0,.35);
 }
+
+/* side hardware — percentages of device height, matching iPhone 17 placement */
+.phone__btn {
+    position: absolute;
+    width: 3px;
+    background: var(--frame-shell);
+    filter: brightness(1.65);
+    z-index: 1;
+}
+.phone__btn--action { left: -2px;  top: 14.5%; height: 3.6%; border-radius: 2px 0 0 2px; }
+.phone__btn--volup  { left: -2px;  top: 21.5%; height: 6.4%; border-radius: 2px 0 0 2px; }
+.phone__btn--voldn  { left: -2px;  top: 29.5%; height: 6.4%; border-radius: 2px 0 0 2px; }
+.phone__btn--power  { right: -2px; top: 23.5%; height: 9.8%; border-radius: 0 2px 2px 0; }
 /* 9:16 so the reel's own video — which the embed pillarboxes inside a 100:124
    media box — ends up exactly as wide as the screen. Height leads so the phone
    shrinks on short viewports instead of overflowing. */
@@ -450,20 +472,76 @@ img { max-width: 100%; display: block; }
 .slide.is-loaded::after { opacity: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* --- status bar, Dynamic Island, home indicator --- */
+.statusbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 7cqh;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.6cqh 7cqw 0;
+    font-size: 2.15cqh;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    color: #fff;
+    fill: #fff;
+    pointer-events: none;
+    text-shadow: 0 1px 3px rgba(0,0,0,.45);
+}
+.statusbar__icons { display: flex; align-items: center; gap: 1.1cqw; }
+.statusbar__icons svg {
+    display: block;
+    height: 1.55cqh;
+    width: auto;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.45));
+}
+
+.island {
+    position: absolute;
+    top: 1.35cqh; left: 50%;
+    transform: translateX(-50%);
+    width: 31cqw; height: 4.6cqh;
+    background: #000;
+    border-radius: 99px;
+    z-index: 7;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 .5px rgba(255,255,255,.06);
+}
+
+.homebar {
+    position: absolute;
+    bottom: 1.05cqh; left: 50%;
+    transform: translateX(-50%);
+    width: 35cqw; height: .62cqh;
+    min-height: 3px;
+    border-radius: 99px;
+    background: rgba(255,255,255,.92);
+    z-index: 6;
+    pointer-events: none;
+    box-shadow: 0 0 6px rgba(0,0,0,.35);
+}
+
+/* iOS only shows the indicator while the finger is moving, so it fades in on
+   interaction and back out once the feed settles */
 .phone__rail {
     position: absolute;
-    top: 10px; bottom: 10px; right: 5px;
-    width: 3px;
-    border-radius: 3px;
-    background: rgba(255,255,255,.08);
+    top: 9cqh; bottom: 4.5cqh; right: 4px;
+    width: 2px;
+    border-radius: 2px;
+    background: rgba(255,255,255,.10);
     overflow: hidden;
     z-index: 3;
+    opacity: 0;
+    transition: opacity 420ms var(--ease);
 }
+.phone__screen.is-scrolling .phone__rail { opacity: 1; transition-duration: 120ms; }
 .phone__rail i {
     display: block;
     width: 100%;
-    border-radius: 3px;
-    background: var(--accent);
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--accent) 80%, transparent);
     transition: background-color var(--accent-t) var(--ease);
 }
 
