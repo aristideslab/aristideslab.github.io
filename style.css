@@ -1248,8 +1248,8 @@ body.no-motion .trailer { display: none; }
         font-size: .72rem;
         display: flex; align-items: center; justify-content: center;
         background: color-mix(in srgb, var(--bg) 85%, transparent);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: var(--glass);
+        -webkit-backdrop-filter: var(--glass);
     }
 }
 
