@@ -27,6 +27,9 @@
     --accent-on:     #ffffff;
     --accent-t:      440ms;
     --frame-shell:   #17171a;
+    /* every frosted surface reads from this, so the panes, the app cards, the
+       hire box and the animation toggle cannot drift to different blurs */
+    --glass:         blur(16px) saturate(1.15);
 
     /* per-app hover outlines. "White" for Vision Emoji becomes ink on a light
        ground — a white outline on bone would be invisible — so the intent (a
@@ -368,8 +371,8 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
     border-radius: 99px;
     border: 1px solid var(--rule);
     background: var(--card);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
     font-family: var(--font-mono);
     font-size: .62rem;
     letter-spacing: .1em;
@@ -414,7 +417,13 @@ body.no-motion .trailer { display: none; }
     scrollbar-width: none;
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+    /* Opacity is deliberately much faster than the slide. An ancestor with
+       opacity between 0 and 1 isolates its subtree, and backdrop-filter on a
+       descendant does not render while that is true — so the glass panes came
+       in unblurred and only frosted once the fade finished. Reaching opacity 1
+       quickly means the blur is there essentially from the start, while the
+       transform keeps the sense of movement. */
+    transition: opacity 150ms var(--ease), transform var(--dur) var(--ease);
 }
 .frame::-webkit-scrollbar { display: none; }
 .frame.is-active { opacity: 1; transform: translate(-50%, -50%); pointer-events: auto; }
@@ -739,8 +748,8 @@ body.no-motion .trailer { display: none; }
     border-radius: 16px;
     border: 1px solid var(--rule);
     background: var(--card);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
     transition: background-color 260ms var(--ease), border-color 260ms var(--ease),
                 box-shadow 260ms var(--ease);
 }
@@ -916,6 +925,8 @@ body.no-motion .trailer { display: none; }
     border-radius: 14px;
     border: 1px solid var(--rule);
     background: var(--card);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
     text-align: left;
     transition: background-color 260ms var(--ease), border-color 260ms var(--ease);
 }
@@ -1048,8 +1059,8 @@ body.no-motion .trailer { display: none; }
     border-radius: 22px;
     border: 1px solid var(--rule);
     background: var(--card);
-    backdrop-filter: blur(16px) saturate(1.15);
-    -webkit-backdrop-filter: blur(16px) saturate(1.15);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
 }
 /* the pane's own edge replaces the leading hairline */
 .frame--links .rows,
