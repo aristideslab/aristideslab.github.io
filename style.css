@@ -122,7 +122,7 @@ img { max-width: 100%; display: block; }
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 26px 34px 0 74px;
+    padding: 26px 34px 0 34px;
     pointer-events: none;
 }
 .topbar > * { pointer-events: auto; }
@@ -143,62 +143,6 @@ img { max-width: 100%; display: block; }
     background: linear-gradient(90deg, currentColor 50%, transparent 50%);
 }
 .theme-toggle:hover { color: var(--text-primary); }
-
-/* ==========================================================================
-   SOCIAL RAIL
-   ========================================================================== */
-.social-sidebar {
-    position: fixed;
-    left: 0; top: 0; bottom: 0;
-    z-index: 120;
-    width: 46px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    border-right: 1px solid var(--rule);
-    background: color-mix(in srgb, var(--bg) 72%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-.social-link {
-    position: relative;
-    display: flex; align-items: center; justify-content: center;
-    width: 34px; height: 34px;
-    border-radius: 9px;
-    color: var(--text-muted);
-    transition: color 200ms var(--ease), background-color 200ms var(--ease);
-}
-.social-link__g {
-    font-family: var(--font-mono);
-    font-size: .55rem;
-    font-weight: 600;
-    letter-spacing: .08em;
-    line-height: 1;
-}
-.social-link:hover { color: var(--bg); background: var(--text-primary); }
-
-/* label slides out of the rail on hover */
-.social-link__label {
-    position: absolute;
-    left: calc(100% + 8px);
-    white-space: nowrap;
-    padding: 5px 10px;
-    border-radius: 7px;
-    background: var(--text-primary);
-    color: var(--bg);
-    font-family: var(--font-mono);
-    font-size: .55rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    opacity: 0;
-    transform: translateX(-6px);
-    pointer-events: none;
-    transition: opacity 180ms var(--ease), transform 180ms var(--ease);
-}
-.social-link:hover .social-link__label,
-.social-link:focus-visible .social-link__label { opacity: 1; transform: none; }
 
 /* ==========================================================================
    CUSTOM CURSOR — a hard dot with a ring that lags behind it
@@ -322,7 +266,7 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
     display: grid;
     grid-template-columns: 20% 56% 24%;
     align-items: stretch;
-    padding: 96px 40px 46px 86px;
+    padding: 96px 40px 46px 40px;
 }
 
 .col { min-width: 0; min-height: 0; }
@@ -1106,14 +1050,14 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
    RESPONSIVE — tablet
    ========================================================================== */
 @media (max-width: 1240px) and (min-width: 861px) {
-    .stage { grid-template-columns: 22% 54% 24%; padding: 90px 26px 40px 74px; }
+    .stage { grid-template-columns: 22% 54% 24%; padding: 90px 26px 40px 26px; }
     .panel { padding-left: 24px; }
     .cards { gap: 10px; }
     .card { padding: 14px; gap: 11px; }
 }
 
 @media (max-width: 1000px) and (min-width: 861px) {
-    .stage { grid-template-columns: 24% 76%; padding: 90px 30px 40px 70px; }
+    .stage { grid-template-columns: 24% 76%; padding: 90px 30px 40px 30px; }
     .col--panel { display: none; }
 }
 
@@ -1124,26 +1068,12 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
     html, body { height: 100dvh; overflow: hidden; }
 
     .topbar { padding: 14px 16px 0; }
-
-    .social-sidebar {
-        left: 0; right: 0; top: auto; bottom: 0;
-        width: 100%;
-        height: calc(44px + env(safe-area-inset-bottom));
-        flex-direction: row;
-        gap: 0;
-        border-right: 0;
-        border-top: 1px solid var(--rule);
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-    .social-link { width: 36px; height: 34px; flex: 0 0 auto; }
-    .social-link__label { display: none; }
-    .social-sidebar { overflow-x: auto; overflow-y: hidden; justify-content: flex-start; padding: 0 6px; }
     .trailer { display: none; }
 
     .stage {
         grid-template-columns: 1fr;
         grid-template-rows: auto minmax(0, 1fr);
-        padding: 46px 20px calc(92px + env(safe-area-inset-bottom));
+        padding: 46px 20px calc(52px + env(safe-area-inset-bottom));
         gap: 14px;
     }
 
@@ -1196,7 +1126,7 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
     .col__foot {
         position: fixed;
         left: 20px;
-        bottom: calc(56px + env(safe-area-inset-bottom));
+        bottom: calc(16px + env(safe-area-inset-bottom));
         z-index: 60;
     }
     .credit { display: none; }
@@ -1205,7 +1135,7 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
         display: flex;
         position: fixed;
         right: 14px;
-        bottom: calc(48px + env(safe-area-inset-bottom));
+        bottom: calc(12px + env(safe-area-inset-bottom));
         z-index: 60;
         gap: 6px;
     }
