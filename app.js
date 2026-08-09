@@ -507,6 +507,14 @@
         var tx = innerWidth / 2, ty = innerHeight / 2;
         var rx = tx, ry = ty, raf = null;
 
+        // Starts hidden and only appears once the pointer actually moves over
+        // the page, so there is never a cursor sitting at a position no one
+        // pointed at — on first paint, after a tab switch, or once the pointer
+        // has left the window.
+        function show() { el.classList.remove('is-away'); }
+        function hide() { el.classList.add('is-away'); }
+        hide();
+
         var INTERACTIVE = 'a,button,input,select,textarea,label,[role="button"],.dot,.phone__screen,.trailer';
         var TEXTUAL = 'input[type="text"],input[type="email"],textarea';
 
@@ -521,6 +529,7 @@
 
         window.addEventListener('pointermove', function (e) {
             tx = e.clientX; ty = e.clientY;
+            show();
             var t = e.target;
             var hit = t && t.closest ? t.closest(INTERACTIVE) : null;
             el.classList.toggle('is-target', !!hit);
@@ -539,6 +548,16 @@
         });
 
         ring.addEventListener('animationend', function () { el.classList.remove('is-down'); });
+
+        // mouseleave on document fires when the pointer exits the viewport;
+        // blur covers switching tab or application, where the pointer can leave
+        // without ever crossing the edge
+        document.addEventListener('mouseleave', hide);
+        document.addEventListener('mouseenter', show);
+        window.addEventListener('blur', hide);
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) hide();
+        });
     })();
 
     /* ---------------------------------------------------------------------

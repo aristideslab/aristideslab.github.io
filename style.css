@@ -254,6 +254,9 @@ img { max-width: 100%; display: block; }
         opacity: 0;
     }
     .cursor.is-down .cursor__ring::after { animation: cursorPulse 520ms var(--ease); }
+    /* pointer is off the page, on another tab, or has not moved yet */
+    .cursor.is-away { opacity: 0; }
+    .cursor { transition: opacity 160ms var(--ease); }
 }
 @keyframes cursorPulse {
     0%   { transform: scale(1);   opacity: .9; }

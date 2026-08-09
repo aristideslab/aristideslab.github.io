@@ -505,7 +505,10 @@
     window.addEventListener('pointermove', function (e) {
         pointer.x = e.clientX; pointer.y = e.clientY; pointer.on = true;
     }, { passive: true });
-    window.addEventListener('pointerleave', function () { pointer.on = false; });
+    function pointerAway() { pointer.on = false; }
+    window.addEventListener('pointerleave', pointerAway);
+    document.addEventListener('mouseleave', pointerAway);
+    window.addEventListener('blur', pointerAway);
 
     document.addEventListener('visibilitychange', function () {
         if (document.hidden) stop(); else start();
