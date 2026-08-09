@@ -28,6 +28,14 @@
     --accent-t:      440ms;
     --frame-shell:   #17171a;
 
+    /* per-app hover outlines. "White" for Vision Emoji becomes ink on a light
+       ground — a white outline on bone would be invisible — so the intent (a
+       neutral, hueless edge) survives both themes. */
+    --app-tdlidar:   rgb(0 114 218);
+    --app-zpth:      rgb(140 74 200);
+    --app-vision:    rgb(17 17 17);
+    --app-splat:     rgb(0 141 41);
+
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, "Cascadia Mono", "Roboto Mono", monospace;
 
@@ -50,6 +58,10 @@ body.dark {
     --accent-ink:    rgb(255 138 110);
     --accent-on:     #0b0b0c;
     --frame-shell:   #0f0f11;
+    --app-tdlidar:   rgb(76 188 255);
+    --app-zpth:      rgb(210 150 255);
+    --app-vision:    rgb(255 255 255);
+    --app-splat:     rgb(76 214 118);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -729,13 +741,22 @@ body.no-motion .trailer { display: none; }
     background: var(--card);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    transition: background-color 260ms var(--ease), border-color 260ms var(--ease), transform 260ms var(--ease);
+    transition: background-color 260ms var(--ease), border-color 260ms var(--ease),
+                box-shadow 260ms var(--ease);
 }
+/* No translate on hover: the frame is a scroll box, so lifting the top row by
+   2px pushed it above the content box and clipped it. An outline reads just as
+   clearly and cannot shift layout. */
 .card:hover {
     background: var(--card-hover);
-    border-color: var(--rule-strong);
-    transform: translateY(-2px);
+    border-color: var(--app, var(--rule-strong));
+    box-shadow: inset 0 0 0 1px var(--app, transparent);
 }
+.card[data-app="0"] { --app: var(--app-tdlidar); }
+.card[data-app="1"] { --app: var(--app-zpth); }
+.card[data-app="2"] { --app: var(--app-vision); }
+.card[data-app="3"] { --app: var(--app-splat); }
+.card:hover .card__cta { color: var(--app, var(--accent-ink)); }
 .card img {
     width: 46px; height: 46px;
     flex: 0 0 auto;
@@ -764,7 +785,6 @@ body.no-motion .trailer { display: none; }
     color: var(--text-muted);
     transition: color 220ms var(--ease);
 }
-.card:hover .card__cta { color: var(--accent-ink); }
 
 .subrow {
     display: flex;
