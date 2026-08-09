@@ -128,7 +128,11 @@ img { max-width: 100%; display: block; }
     /* the canvas paints its own opaque ground in the same colour as the page,
        so dropping opacity only recedes the flock, never the background */
     opacity: .55;
+    transition: opacity 260ms var(--ease);
 }
+/* the sweep briefly brings the whole field forward, so the pulse is obvious
+   without the resting background being any busier */
+body.is-wiping #field { opacity: .95; }
 
 /* ==========================================================================
    TOP BAR

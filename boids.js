@@ -77,6 +77,11 @@
 
     function randomColour() { return palette[(Math.random() * palette.length) | 0]; }
 
+    // the wipe reads as a flash of the opposite of the ground it crosses
+    function pulseColour() {
+        return document.body.classList.contains('dark') ? [1, 1, 1] : [0, 0, 0];
+    }
+
     /* ------------------------------------------------------------ simulation */
     function allocate(count) {
         N = count;
@@ -276,17 +281,19 @@
         }
         uploadColours();
         wipe = { dir: dir, pos: dir > 0 ? H + 40 : -40, life: 1 };
+        document.body.classList.add('is-wiping');
     }
 
     function stepWipe() {
         if (!wipe) return;
-        var speed = (H + 80) / 42;                 // ~0.7s at 60fps
+        var speed = (H + 80) / 52;                 // ~0.87s at 60fps, slow enough to read
         wipe.pos += wipe.dir > 0 ? -speed : speed;
         var done = wipe.dir > 0 ? wipe.pos < -40 : wipe.pos > H + 40;
         if (done) {
             colA.set(colB);
             uploadColours();
             wipe = null;
+            document.body.classList.remove('is-wiping');
         }
     }
 
@@ -322,13 +329,25 @@
         var pointVS = `#version 300 es
         in vec2 aPos; in vec3 aColA; in vec3 aColB; in float aSize;
         uniform vec2 uRes; uniform float uWipeY; uniform float uWipeDir; uniform float uDpr;
+        uniform vec3 uPulse; uniform float uBand;
         out vec3 vCol;
         void main(){
           vec2 c = (aPos / uRes) * 2.0 - 1.0; c.y = -c.y;
           gl_Position = vec4(c, 0.0, 1.0);
-          gl_PointSize = aSize * uDpr;
+
           bool passed = uWipeDir > 0.0 ? (aPos.y > uWipeY) : (aPos.y < uWipeY);
-          vCol = (uWipeDir == 0.0) ? aColA : (passed ? aColB : aColA);
+          vec3 base = (uWipeDir == 0.0) ? aColA : (passed ? aColB : aColA);
+
+          // a band of light travels with the wipe line: boids flash toward the
+          // pulse colour as it reaches them, then fall back to their new hue
+          // smoothstep is undefined when edge0 >= edge1, so this has to ramp
+          // upward and be inverted rather than passing the edges backwards
+          float pulse = (uWipeDir == 0.0)
+            ? 0.0
+            : 1.0 - smoothstep(0.0, uBand, abs(aPos.y - uWipeY));
+
+          vCol = mix(base, uPulse, pulse);
+          gl_PointSize = aSize * uDpr * (1.0 + pulse * 2.2);
         }`;
 
         var pointFS = `#version 300 es
@@ -363,6 +382,8 @@
                 wipeY: gl.getUniformLocation(pPoint, 'uWipeY'),
                 wipeDir: gl.getUniformLocation(pPoint, 'uWipeDir'),
                 dpr: gl.getUniformLocation(pPoint, 'uDpr'),
+                pulse: gl.getUniformLocation(pPoint, 'uPulse'),
+                band: gl.getUniformLocation(pPoint, 'uBand'),
                 bgc: gl.getUniformLocation(pFade, 'uBg'),
                 fade: gl.getUniformLocation(pFade, 'uFade')
             },
@@ -414,6 +435,9 @@
         gl.uniform1f(R.u.dpr, dpr);
         gl.uniform1f(R.u.wipeY, wipe ? wipe.pos : 0);
         gl.uniform1f(R.u.wipeDir, wipe ? wipe.dir : 0);
+        var pc = pulseColour();
+        gl.uniform3f(R.u.pulse, pc[0], pc[1], pc[2]);
+        gl.uniform1f(R.u.band, Math.max(110, H * 0.20));
         gl.bindVertexArray(R.vao);
         gl.bindBuffer(gl.ARRAY_BUFFER, R.bPos);
         gl.bufferSubData(gl.ARRAY_BUFFER, 0, R.posBuf);
@@ -428,15 +452,23 @@
         ctx2d.fillStyle = 'rgb(' + bg[0] + ',' + bg[1] + ',' + bg[2] + ')';
         ctx2d.fillRect(0, 0, W, H);
         ctx2d.globalAlpha = 1;
+        var pc2 = pulseColour(), band = Math.max(110, H * 0.20);
         for (var i = 0; i < N; i++) {
-            var c;
+            var c, pulse = 0;
             if (wipe) {
                 var passed = wipe.dir > 0 ? py[i] > wipe.pos : py[i] < wipe.pos;
                 c = passed ? colB : colA;
+                var d = Math.abs(py[i] - wipe.pos);
+                pulse = d >= band ? 0 : 1 - (d / band);
+                pulse = pulse * pulse * (3 - 2 * pulse);          // smoothstep
             } else c = colA;
-            ctx2d.fillStyle = 'rgb(' + ((c[i * 3] * 255) | 0) + ',' + ((c[i * 3 + 1] * 255) | 0) + ',' + ((c[i * 3 + 2] * 255) | 0) + ')';
+            var r0 = c[i * 3], g0 = c[i * 3 + 1], b0 = c[i * 3 + 2];
+            ctx2d.fillStyle = 'rgb(' +
+                (((r0 + (pc2[0] - r0) * pulse) * 255) | 0) + ',' +
+                (((g0 + (pc2[1] - g0) * pulse) * 255) | 0) + ',' +
+                (((b0 + (pc2[2] - b0) * pulse) * 255) | 0) + ')';
             ctx2d.beginPath();
-            ctx2d.arc(px[i], py[i], size[i] * 0.5, 0, 6.2832);
+            ctx2d.arc(px[i], py[i], size[i] * 0.5 * (1 + pulse * 2.2), 0, 6.2832);
             ctx2d.fill();
         }
     }
@@ -556,6 +588,7 @@
         move: moveBurst,
         release: releaseBurst,
         // mean on-screen displacement per frame, in CSS pixels
+        wipeState: function () { return wipe ? { dir: wipe.dir, pos: Math.round(wipe.pos) } : null; },
         speed: function () {
             var sum = 0;
             for (var i = 0; i < N; i++) sum += Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i]);
