@@ -38,11 +38,11 @@ body.dark {
     --card:          rgba(255,255,255,.045);
     --card-hover:    rgba(255,255,255,.09);
     --text-primary:  #f2f1ec;
-    --text-secondary:#a5a49e;
-    --text-muted:    #6e6d68;
-    --text-subtle:   #45454a;
-    --rule:          #232325;
-    --rule-strong:   #35353a;
+    --text-secondary:#cfcec8;
+    --text-muted:    #9e9d96;
+    --text-subtle:   #7e7e85;
+    --rule:          #35353c;
+    --rule-strong:   #50505a;
     --accent:        rgb(255 122 92);
     --accent-ink:    rgb(255 138 110);
     --accent-on:     #0b0b0c;
@@ -199,6 +199,12 @@ img { max-width: 100%; display: block; }
     }
     .cursor.is-down .cursor__ring::after { animation: cursorPulse 520ms var(--ease); }
     /* pointer is off the page, on another tab, or has not moved yet */
+    /* held: the ring stays open to show the flock is still being gathered */
+    .cursor.is-holding .cursor__ring {
+        width: 34px; height: 34px; margin: -17px 0 0 -17px;
+        border-color: #fff;
+        background: transparent;
+    }
     .cursor.is-away { opacity: 0; }
     .cursor { transition: opacity 160ms var(--ease); }
 }
@@ -497,13 +503,15 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
 .phone__btn--volup  { left: -2px;  top: 21.5%; height: 6.4%; border-radius: 2px 0 0 2px; }
 .phone__btn--voldn  { left: -2px;  top: 29.5%; height: 6.4%; border-radius: 2px 0 0 2px; }
 .phone__btn--power  { right: -2px; top: 23.5%; height: 9.8%; border-radius: 0 2px 2px 0; }
-/* 9:16 so the reel's own video — which the embed pillarboxes inside a 100:124
-   media box — ends up exactly as wide as the screen. Height leads so the phone
-   shrinks on short viewports instead of overflowing. */
+/* iPhone 17's real screen is 402x874pt, i.e. 1:2.174 — far taller than 16:9,
+   which is what made the earlier frame look squat. A 9:16 reel on a screen this
+   tall has to be cropped at the sides to fill, which is exactly what Instagram
+   does on the device itself. Height leads the sizing so the phone shrinks on
+   short viewports rather than overflowing. */
 .phone__screen {
     position: relative;
-    height: min(56vh, 520px);
-    aspect-ratio: 9 / 16;
+    height: min(62vh, 620px);
+    aspect-ratio: 402 / 874;
     container-type: size;
     border-radius: 33px;
     overflow: hidden;

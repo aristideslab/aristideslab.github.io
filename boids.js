@@ -171,8 +171,8 @@
             if (pointer.on) {
                 var mx = x - pointer.x, my = y - pointer.y;
                 var md2 = mx * mx + my * my;
-                if (md2 < 12000 && md2 > 1) {
-                    var f = 34 / md2;
+                if (md2 < 9000 && md2 > 1) {
+                    var f = 12 / md2;
                     ax += mx * f; ay += my * f;
                 }
             }
@@ -191,14 +191,13 @@
             px[i] = x; py[i] = y;
         }
 
-        if (burst) {
+        if (burst && !burst.held) {
             burst.life -= 1 / 60;
             if (burst.life <= 0) burst = null;
         }
     }
 
     /* ------------------------------------------------- click influence field */
-    var BEHAVIOURS = ['attract', 'repel', 'orbit', 'zigzag', 'shockwave', 'vortex', 'scatter'];
     var bfx = 0, bfy = 0;
 
     // writes the pair into bfx/bfy rather than returning, so one distance
@@ -252,10 +251,12 @@
         }
     }
 
+    // Press and hold gathers the flock into a ring and keeps it there. While
+    // held the life never ticks down, so the falloff term stays at 1 and the
+    // orbit is sustained indefinitely; release starts the decay.
     function fireBurst(x, y) {
-        var kind = BEHAVIOURS[(Math.random() * BEHAVIOURS.length) | 0];
-        var max = 1.4 + Math.random() * 1.2;
-        burst = { kind: kind, x: x, y: y, radius: 300 + Math.random() * 190, life: max, max: max, age: 0 };
+        var max = 1.1;
+        burst = { kind: 'orbit', x: x, y: y, radius: 330, life: max, max: max, age: 0, held: true };
 
         // every click also recolours nearby boids — a local version of the wipe
         var r2 = 270 * 270;
@@ -526,8 +527,13 @@
 
     window.addEventListener('lab:trail', function (e) { trail = e.detail.value; });
 
+    function moveBurst(x, y) { if (burst && burst.held) { burst.x = x; burst.y = y; } }
+    function releaseBurst() { if (burst) burst.held = false; }
+
     window.LabField = {
         burst: fireBurst,
+        move: moveBurst,
+        release: releaseBurst,
         // mean on-screen displacement per frame, in CSS pixels
         speed: function () {
             var sum = 0;

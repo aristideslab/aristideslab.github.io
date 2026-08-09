@@ -527,9 +527,13 @@
         }
         raf = requestAnimationFrame(loop);
 
+        var holding = false;
+
         window.addEventListener('pointermove', function (e) {
             tx = e.clientX; ty = e.clientY;
             show();
+            // keep the ring centred on the pointer for as long as it is held
+            if (holding && window.LabField) window.LabField.move(e.clientX, e.clientY);
             var t = e.target;
             var hit = t && t.closest ? t.closest(INTERACTIVE) : null;
             el.classList.toggle('is-target', !!hit);
@@ -544,8 +548,22 @@
 
             var t = e.target;
             var onChrome = t && t.closest && t.closest(INTERACTIVE);
-            if (!onChrome && window.LabField) window.LabField.burst(e.clientX, e.clientY);
+            if (!onChrome && window.LabField) {
+                holding = true;
+                el.classList.add('is-holding');
+                window.LabField.burst(e.clientX, e.clientY);
+            }
         });
+
+        function letGo() {
+            if (!holding) return;
+            holding = false;
+            el.classList.remove('is-holding');
+            if (window.LabField) window.LabField.release();
+        }
+        window.addEventListener('pointerup', letGo);
+        window.addEventListener('pointercancel', letGo);
+        window.addEventListener('blur', letGo);
 
         ring.addEventListener('animationend', function () { el.classList.remove('is-down'); });
 
