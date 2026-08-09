@@ -157,9 +157,6 @@ img { max-width: 100%; display: block; }
     align-items: center;
     justify-content: center;
     gap: 2px;
-    overflow-y: auto;
-    overflow-x: visible;
-    scrollbar-width: none;
     border-right: 1px solid var(--rule);
     background: color-mix(in srgb, var(--bg) 72%, transparent);
     backdrop-filter: blur(10px);
@@ -219,30 +216,30 @@ img { max-width: 100%; display: block; }
     }
     .cursor i { position: absolute; display: block; border-radius: 50%; }
     .cursor__ring {
-        width: 30px; height: 30px;
-        margin: -15px 0 0 -15px;
+        width: 20px; height: 20px;
+        margin: -10px 0 0 -10px;
         border: 1.5px solid #fff;
         transition: width 220ms var(--ease), height 220ms var(--ease),
                     margin 220ms var(--ease), border-radius 220ms var(--ease),
                     opacity 220ms var(--ease), background-color 220ms var(--ease);
     }
     .cursor__dot {
-        width: 4px; height: 4px;
-        margin: -2px 0 0 -2px;
+        width: 2.5px; height: 2.5px;
+        margin: -1.25px 0 0 -1.25px;
         background: #fff;
         transition: opacity 200ms var(--ease), transform 200ms var(--ease);
     }
     /* over something clickable */
     .cursor.is-target .cursor__ring {
-        width: 46px; height: 46px; margin: -23px 0 0 -23px;
+        width: 31px; height: 31px; margin: -15.5px 0 0 -15.5px;
         background: rgba(255,255,255,.85);
         border-color: transparent;
     }
     .cursor.is-target .cursor__dot { opacity: 0; }
     /* over a text field */
     .cursor.is-text .cursor__ring {
-        width: 2px; height: 24px;
-        margin: -12px 0 0 -1px;
+        width: 1.5px; height: 16px;
+        margin: -8px 0 0 -.75px;
         border-radius: 1px;
         background: #fff;
         border-color: transparent;
