@@ -455,8 +455,23 @@
         raf = requestAnimationFrame(frame);
     }
 
-    function start() { if (!raf && !reduceMotion) raf = requestAnimationFrame(frame); }
+    var enabled = true;
+
+    function start() { if (!raf && !reduceMotion && enabled) raf = requestAnimationFrame(frame); }
     function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+
+    // leaves a flat ground in the page colour rather than a frozen last frame
+    function clearToBg() {
+        if (mode === 'gl' && gl) {
+            gl.clearColor(bgTarget[0] / 255, bgTarget[1] / 255, bgTarget[2] / 255, 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        } else if (ctx2d) {
+            ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx2d.globalAlpha = 1;
+            ctx2d.fillStyle = 'rgb(' + bgTarget.join(',') + ')';
+            ctx2d.fillRect(0, 0, W, H);
+        }
+    }
 
     /* ----------------------------------------------------------------- sizing */
     function resize() {
@@ -526,6 +541,12 @@
     });
 
     window.addEventListener('lab:trail', function (e) { trail = e.detail.value; });
+
+    window.addEventListener('lab:motion', function (e) {
+        enabled = !!e.detail.on;
+        if (enabled) start();
+        else { stop(); burst = null; clearToBg(); }
+    });
 
     function moveBurst(x, y) { if (burst && burst.held) { burst.x = x; burst.y = y; } }
     function releaseBurst() { if (burst) burst.held = false; }

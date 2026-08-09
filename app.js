@@ -579,6 +579,34 @@
     })();
 
     /* ---------------------------------------------------------------------
+       Animation toggle — an accessibility escape hatch for anyone who finds
+       the moving background hard to read against. Persisted like the theme.
+       --------------------------------------------------------------------- */
+    (function motionToggle() {
+        var btn = document.getElementById('motionToggle');
+        if (!btn) return;
+        var label = btn.querySelector('.motion-toggle__label');
+
+        function apply(on, save) {
+            document.body.classList.toggle('no-motion', !on);
+            btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+            label.textContent = on ? 'Animation on' : 'Animation off';
+            window.dispatchEvent(new CustomEvent('lab:motion', { detail: { on: on } }));
+            if (save) { try { localStorage.setItem('motion', on ? 'on' : 'off'); } catch (e) {} }
+        }
+
+        var saved = null;
+        try { saved = localStorage.getItem('motion'); } catch (e) {}
+        // respect a system reduced-motion preference as the default
+        if (saved === null && window.matchMedia('(prefers-reduced-motion: reduce)').matches) saved = 'off';
+        apply(saved !== 'off', false);
+
+        btn.addEventListener('click', function () {
+            apply(btn.getAttribute('aria-pressed') === 'false', true);
+        });
+    })();
+
+    /* ---------------------------------------------------------------------
        Trail slider
        --------------------------------------------------------------------- */
     (function trailSlider() {

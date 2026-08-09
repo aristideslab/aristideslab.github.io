@@ -4,14 +4,17 @@
 :root {
     --bg:            #f3f2ee;
     --bg-sunk:       #eae8e2;
-    --card:          rgba(255,255,255,.58);
+    --card:          rgba(255,255,255,.66);
     --card-hover:    rgba(255,255,255,.9);
-    --text-primary:  #17171a;
-    --text-secondary:#55555a;
-    --text-muted:    #97968f;
-    --text-subtle:   #cbcac3;
-    --rule:          #dedcd4;
-    --rule-strong:   #c8c6bc;
+    /* Every text token resolves to the same ink. Hierarchy is carried by size
+       and weight alone, so nothing on the page is set in a lighter grey. Only
+       the two rule tokens stay lighter — they draw hairlines, not words. */
+    --text-primary:  #000000;
+    --text-secondary:#000000;
+    --text-muted:    #000000;
+    --text-subtle:   #000000;
+    --rule:          #b9b7ad;
+    --rule-strong:   #94918a;
 
     /* Accent is re-rolled per section by app.js. Three tokens because one
        hue can't do every job legibly on both grounds:
@@ -35,14 +38,14 @@
 body.dark {
     --bg:            #0b0b0c;
     --bg-sunk:       #131315;
-    --card:          rgba(255,255,255,.045);
+    --card:          rgba(255,255,255,.075);
     --card-hover:    rgba(255,255,255,.09);
-    --text-primary:  #f2f1ec;
-    --text-secondary:#cfcec8;
-    --text-muted:    #9e9d96;
-    --text-subtle:   #7e7e85;
-    --rule:          #35353c;
-    --rule-strong:   #50505a;
+    --text-primary:  #ffffff;
+    --text-secondary:#ffffff;
+    --text-muted:    #ffffff;
+    --text-subtle:   #ffffff;
+    --rule:          #55555f;
+    --rule-strong:   #74747f;
     --accent:        rgb(255 122 92);
     --accent-ink:    rgb(255 138 110);
     --accent-on:     #0b0b0c;
@@ -336,12 +339,43 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
 
 .credit {
     font-family: var(--font-mono);
-    font-size: .56rem;
+    font-size: .68rem;
     letter-spacing: .06em;
     color: var(--text-subtle);
     line-height: 1.8;
 }
 .credit__sep { margin: 0 .5em; }
+
+/* lets anyone who finds the moving background hard to read against switch it off */
+.motion-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 6px 12px 6px 9px;
+    border-radius: 99px;
+    border: 1px solid var(--rule);
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-family: var(--font-mono);
+    font-size: .62rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    align-self: flex-start;
+    transition: border-color 200ms var(--ease), background-color 200ms var(--ease);
+}
+.motion-toggle:hover { border-color: var(--rule-strong); }
+.motion-toggle__dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent-ink);
+    transition: background-color var(--accent-t) var(--ease), opacity 200ms var(--ease);
+}
+.motion-toggle[aria-pressed="false"] .motion-toggle__dot { opacity: .28; background: currentColor; }
+/* with the field off the trail control has nothing to act on */
+body.no-motion .trailer { display: none; }
 .credit kbd {
     font: inherit;
     border: 1px solid var(--rule);
@@ -637,7 +671,7 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
     margin: -4px 0 0;
     text-align: center;
     font-family: var(--font-mono);
-    font-size: .5rem;
+    font-size: .64rem;
     letter-spacing: .2em;
     text-transform: uppercase;
     color: var(--text-subtle);
@@ -657,7 +691,7 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
 
 .viewer__count {
     font-family: var(--font-mono);
-    font-size: .6rem;
+    font-size: .7rem;
     letter-spacing: .1em;
     color: var(--text-muted);
     min-width: 42px;
@@ -668,7 +702,7 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
 
 .viewer__out {
     font-family: var(--font-mono);
-    font-size: .58rem;
+    font-size: .72rem;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--text-muted);
@@ -977,6 +1011,34 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
 .success__title { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -.02em; }
 .success__body { font-size: .85rem; color: var(--text-primary); }
 
+
+/* ==========================================================================
+   GLASS PANELS
+
+   Links, Skills and Contact each sit on one rounded pane that blurs the flock
+   behind it, the same treatment the app cards already use. The blur is what
+   buys the legibility — a flat fill at this opacity would still let the moving
+   dots read through as texture under the text.
+   ========================================================================== */
+.frame--links .rows,
+.frame--skills .spec,
+.frame--contact .form,
+.frame--contact .success {
+    padding: 24px 26px;
+    border-radius: 22px;
+    border: 1px solid var(--rule);
+    background: var(--card);
+    backdrop-filter: blur(16px) saturate(1.15);
+    -webkit-backdrop-filter: blur(16px) saturate(1.15);
+}
+/* the pane's own edge replaces the leading hairline */
+.frame--links .rows,
+.frame--skills .spec { border-top: 1px solid var(--rule); }
+.frame--links .row:last-child,
+.frame--skills .grp:last-child { border-bottom: 0; padding-bottom: 0; }
+.frame--links .row:first-child { padding-top: 0; }
+.frame--skills .grp:first-child { padding-top: 0; }
+
 /* ==========================================================================
    RIGHT PANEL
    ========================================================================== */
@@ -999,18 +1061,18 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
 .panel.is-active { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
 
 .panel__lede {
-    font-size: .92rem;
+    font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.35;
     letter-spacing: -.015em;
     margin-bottom: 12px;
 }
 .panel__body {
-    font-size: .78rem;
-    line-height: 1.62;
+    font-size: .88rem;
+    line-height: 1.6;
     color: var(--text-secondary);
     margin-bottom: 12px;
-    max-width: 250px;
+    max-width: 270px;
 }
 .panel__cta {
     display: inline-block;
@@ -1026,18 +1088,18 @@ body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
 .meta {
     margin-top: 22px;
     border-top: 1px solid var(--rule);
-    max-width: 250px;
+    max-width: 270px;
 }
 .meta dt {
     font-family: var(--font-mono);
-    font-size: .52rem;
+    font-size: .62rem;
     letter-spacing: .13em;
     text-transform: uppercase;
     color: var(--text-muted);
     padding-top: 11px;
 }
 .meta dd {
-    font-size: .74rem;
+    font-size: .84rem;
     color: var(--text-secondary);
     padding-bottom: 11px;
     border-bottom: 1px solid var(--rule);
