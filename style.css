@@ -461,11 +461,29 @@ body.no-motion .trailer { display: none; }
     color: var(--text-secondary);
 }
 
-/* "New" announcement inside the index subtitle — accent text, not a pill */
-.flag { color: var(--accent-ink); }
-.flag b { font-weight: 600; }
+/* "New" announcement — its own frosted box on its own line, sitting below the
+   subtitle rather than trailing off the end of it. inline-flex so the box hugs
+   the sentence instead of stretching the column width. */
+.flag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 7px;
+    margin-top: 20px;
+    padding: 13px 18px;
+    border-radius: 16px;
+    border: 1px solid var(--rule);
+    background: var(--card);
+    backdrop-filter: var(--glass);
+    -webkit-backdrop-filter: var(--glass);
+    color: var(--accent-ink);
+    font-size: .9rem;
+    line-height: 1.4;
+    transition: border-color 240ms var(--ease), background-color 240ms var(--ease),
+                color var(--accent-t) var(--ease);
+}
+.flag b { font-weight: 700; flex: 0 0 auto; }
 .flag em { font-style: normal; display: inline-block; transition: transform 240ms var(--ease); }
-.flag:hover { text-decoration: underline; text-underline-offset: 3px; }
+.flag:hover { border-color: var(--accent-ink); background: var(--card-hover); }
 .flag:hover em { transform: translate(2px,-2px); }
 
 .toc {
