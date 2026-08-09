@@ -69,6 +69,9 @@
     var accentRGB = [224, 60, 0];          // vivid, as [r,g,b] for the canvas
     var hueIndex = -1;
 
+    // boids.js draws from the same hues and the same converter
+    window.LAB = { hues: HUES, oklch: oklch };
+
     function paintAccent(hue, dark) {
         var vivid = oklch(dark ? 0.76 : 0.66, 0.20, hue);
         var ink   = oklch(dark ? 0.80 : 0.46, 0.19, hue);
@@ -121,10 +124,13 @@
     function go(index, fromHash) {
         index = Math.max(0, Math.min(SECTIONS.length - 1, index));
         if (index === current) return;
+        var previous = current;
         current = index;
 
+        var dir = previous === -1 ? 1 : (index > previous ? 1 : -1);
         document.body.setAttribute('data-section', String(index));
         rollAccent();
+        window.dispatchEvent(new CustomEvent('lab:section', { detail: { index: index, dir: dir } }));
 
         [titles, frames, panels].forEach(function (group) {
             group.forEach(function (el, i) {
@@ -467,6 +473,7 @@
         toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
         // lightness targets differ per ground, so re-derive rather than reuse
         if (hueIndex >= 0) paintAccent(HUES[hueIndex].h, dark);
+        window.dispatchEvent(new CustomEvent('lab:theme', { detail: { dark: dark } }));
     }
 
     var saved = null;
@@ -481,123 +488,70 @@
     });
 
     /* ---------------------------------------------------------------------
-       LiDAR field — a perspective ground plane of scan rows across the page.
-       Rows bunch toward the horizon and spread toward the viewer; a scan bar
-       travels outward lighting each row it crosses.
+       Custom cursor + click-to-influence
+
+       The ring lerps toward the pointer while the dot tracks it exactly, so
+       the pair reads as one object with weight. Clicks only disturb the flock
+       when they land on negative space — anything interactive keeps its own
+       meaning, so a button press never doubles as a canvas gesture.
        --------------------------------------------------------------------- */
-    (function field() {
-        var canvas = document.getElementById('field');
-        var ctx = canvas.getContext('2d');
-        var pts = [];
-        var raf = null;
-        var w = 0, h = 0, dpr = 1, t = 0;
-        var pointer = { x: 0.5, y: 0.72, on: false };
+    (function cursor() {
+        if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
 
-        var ROWS = 30;
-        var HORIZON = 0.42;
+        var el = document.getElementById('cursor');
+        if (!el) return;
+        var ring = el.querySelector('.cursor__ring');
+        var dot = el.querySelector('.cursor__dot');
+        document.documentElement.classList.add('has-cursor');
 
-        function size() {
-            dpr = Math.min(window.devicePixelRatio || 1, 2);
-            w = window.innerWidth;
-            h = window.innerHeight;
-            canvas.width = Math.round(w * dpr);
-            canvas.height = Math.round(h * dpr);
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var tx = innerWidth / 2, ty = innerHeight / 2;
+        var rx = tx, ry = ty, raf = null;
+
+        var INTERACTIVE = 'a,button,input,select,textarea,label,[role="button"],.dot,.phone__screen,.trailer';
+        var TEXTUAL = 'input[type="text"],input[type="email"],textarea';
+
+        function loop() {
+            rx += (tx - rx) * 0.19;
+            ry += (ty - ry) * 0.19;
+            ring.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)';
+            dot.style.transform = 'translate3d(' + tx + 'px,' + ty + 'px,0)';
+            raf = requestAnimationFrame(loop);
         }
-
-        function seed() {
-            var perRow = Math.max(26, Math.round(w / 22));
-            pts = [];
-            for (var r = 0; r < ROWS; r++) {
-                var k = r / (ROWS - 1);          // 0 = far, 1 = near
-                var near = Math.pow(k, 2.3);
-                for (var i = 0; i < perRow; i++) {
-                    var u = i / (perRow - 1);
-                    pts.push({
-                        k: k,
-                        near: near,
-                        spread: 0.5 + (u - 0.5) * (0.3 + 2.1 * near),
-                        y: HORIZON + (1 - HORIZON) * near,
-                        p: u * 5.2 + r * 0.6
-                    });
-                }
-            }
-        }
-
-        function palette() {
-            var dark = document.body.classList.contains('dark');
-            var acc = accentRGB.join(',');           // follows the section's roll
-            return dark
-                ? { dot: '226,229,238', acc: acc, base: 0.32, hi: 0.66 }
-                : { dot: '23,23,26',    acc: acc, base: 0.24, hi: 0.50 };
-        }
-
-        function draw() {
-            t += 0.0026;
-            ctx.clearRect(0, 0, w, h);
-
-            var c = palette();
-            var sweep = (t * 0.3) % 1.5;
-            var cx = pointer.on ? pointer.x : 0.5 + Math.sin(t * 0.6) * 0.1;
-            var cy = pointer.on ? pointer.y : 0.75;
-
-            for (var i = 0; i < pts.length; i++) {
-                var p = pts[i];
-
-                var wave = Math.sin(p.p + t * 2.1 - p.k * 4) * 0.05 * p.near;
-
-                var dx = p.spread - cx, dy = p.y - cy;
-                var pull = 0.04 / ((dx * dx + dy * dy) * 26 + 0.09);
-
-                var x = (p.spread + dx * pull * 0.7) * w;
-                var y = (p.y - wave + dy * pull * 0.35) * h;
-                if (x < -20 || x > w + 20) continue;
-
-                var depth = 0.1 + p.near * 0.9;
-                var scan = Math.max(0, 1 - Math.abs(p.near - sweep) * 8);
-                var hot = Math.min(1, pull * 1.5 + scan);
-                var r = (0.4 + p.near * 1.5) * (1 + scan * 0.7);
-
-                if (hot > 0.05) {
-                    ctx.fillStyle = 'rgba(' + c.acc + ',' + Math.min(c.hi, hot * depth * c.hi * 1.8).toFixed(3) + ')';
-                } else {
-                    ctx.fillStyle = 'rgba(' + c.dot + ',' + (depth * c.base).toFixed(3) + ')';
-                }
-                ctx.beginPath();
-                ctx.arc(x, y, r, 0, 6.2832);
-                ctx.fill();
-            }
-
-            raf = requestAnimationFrame(draw);
-        }
-
-        function start() {
-            if (raf) return;
-            size();
-            if (!pts.length) seed();
-            if (reduceMotion) { draw(); stop(); return; }
-            raf = requestAnimationFrame(draw);
-        }
-        function stop() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
+        raf = requestAnimationFrame(loop);
 
         window.addEventListener('pointermove', function (e) {
-            pointer.x = e.clientX / window.innerWidth;
-            pointer.y = e.clientY / window.innerHeight;
-            pointer.on = true;
+            tx = e.clientX; ty = e.clientY;
+            var t = e.target;
+            var hit = t && t.closest ? t.closest(INTERACTIVE) : null;
+            el.classList.toggle('is-target', !!hit);
+            el.classList.toggle('is-text', !!(t && t.closest && t.closest(TEXTUAL)));
         }, { passive: true });
-        window.addEventListener('pointerleave', function () { pointer.on = false; });
 
-        var resizeTimer = null;
-        window.addEventListener('resize', function () {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(function () { size(); seed(); }, 120);
+        window.addEventListener('pointerdown', function (e) {
+            if (e.button !== 0) return;
+            el.classList.remove('is-down');
+            void el.offsetWidth;                       // restart the pulse animation
+            el.classList.add('is-down');
+
+            var t = e.target;
+            var onChrome = t && t.closest && t.closest(INTERACTIVE);
+            if (!onChrome && window.LabField) window.LabField.burst(e.clientX, e.clientY);
         });
 
-        document.addEventListener('visibilitychange', function () {
-            if (document.hidden) stop(); else start();
-        });
+        ring.addEventListener('animationend', function () { el.classList.remove('is-down'); });
+    })();
 
-        start();
+    /* ---------------------------------------------------------------------
+       Trail slider
+       --------------------------------------------------------------------- */
+    (function trailSlider() {
+        var input = document.getElementById('trailRange');
+        if (!input) return;
+        function push() {
+            window.dispatchEvent(new CustomEvent('lab:trail', { detail: { value: input.value / 100 } }));
+        }
+        input.addEventListener('input', push);
+        push();
     })();
 
     /* ---------------------------------------------------------------------

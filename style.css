@@ -107,6 +107,9 @@ img { max-width: 100%; display: block; }
     height: 100%;
     z-index: 0;
     pointer-events: none;
+    /* the canvas paints its own opaque ground in the same colour as the page,
+       so dropping opacity only recedes the flock, never the background */
+    opacity: .55;
 }
 
 /* ==========================================================================
@@ -154,26 +157,159 @@ img { max-width: 100%; display: block; }
     align-items: center;
     justify-content: center;
     gap: 2px;
+    overflow-y: auto;
+    overflow-x: visible;
+    scrollbar-width: none;
     border-right: 1px solid var(--rule);
     background: color-mix(in srgb, var(--bg) 72%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
 .social-link {
+    position: relative;
     display: flex; align-items: center; justify-content: center;
     width: 34px; height: 34px;
     border-radius: 9px;
+    color: var(--text-muted);
+    transition: color 200ms var(--ease), background-color 200ms var(--ease);
+}
+.social-link__g {
     font-family: var(--font-mono);
     font-size: .55rem;
     font-weight: 600;
     letter-spacing: .08em;
-    color: var(--text-muted);
-    transition: color 200ms var(--ease), background-color 200ms var(--ease), transform 200ms var(--ease);
+    line-height: 1;
 }
-.social-link:hover {
-    color: var(--bg);
+.social-link:hover { color: var(--bg); background: var(--text-primary); }
+
+/* label slides out of the rail on hover */
+.social-link__label {
+    position: absolute;
+    left: calc(100% + 8px);
+    white-space: nowrap;
+    padding: 5px 10px;
+    border-radius: 7px;
     background: var(--text-primary);
-    transform: translateY(-1px);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: .55rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateX(-6px);
+    pointer-events: none;
+    transition: opacity 180ms var(--ease), transform 180ms var(--ease);
+}
+.social-link:hover .social-link__label,
+.social-link:focus-visible .social-link__label { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   CUSTOM CURSOR — a hard dot with a ring that lags behind it
+   ========================================================================== */
+.cursor { display: none; }
+@media (hover: hover) and (pointer: fine) {
+    html.has-cursor, html.has-cursor * { cursor: none !important; }
+    .cursor {
+        display: block;
+        position: fixed;
+        top: 0; left: 0;
+        z-index: 9999;
+        pointer-events: none;
+        mix-blend-mode: difference;
+    }
+    .cursor i { position: absolute; display: block; border-radius: 50%; }
+    .cursor__ring {
+        width: 30px; height: 30px;
+        margin: -15px 0 0 -15px;
+        border: 1.5px solid #fff;
+        transition: width 220ms var(--ease), height 220ms var(--ease),
+                    margin 220ms var(--ease), border-radius 220ms var(--ease),
+                    opacity 220ms var(--ease), background-color 220ms var(--ease);
+    }
+    .cursor__dot {
+        width: 4px; height: 4px;
+        margin: -2px 0 0 -2px;
+        background: #fff;
+        transition: opacity 200ms var(--ease), transform 200ms var(--ease);
+    }
+    /* over something clickable */
+    .cursor.is-target .cursor__ring {
+        width: 46px; height: 46px; margin: -23px 0 0 -23px;
+        background: rgba(255,255,255,.85);
+        border-color: transparent;
+    }
+    .cursor.is-target .cursor__dot { opacity: 0; }
+    /* over a text field */
+    .cursor.is-text .cursor__ring {
+        width: 2px; height: 24px;
+        margin: -12px 0 0 -1px;
+        border-radius: 1px;
+        background: #fff;
+        border-color: transparent;
+    }
+    .cursor.is-text .cursor__dot { opacity: 0; }
+    .cursor__ring::after {
+        content: "";
+        position: absolute;
+        inset: -1.5px;
+        border-radius: 50%;
+        border: 1.5px solid #fff;
+        opacity: 0;
+    }
+    .cursor.is-down .cursor__ring::after { animation: cursorPulse 520ms var(--ease); }
+}
+@keyframes cursorPulse {
+    0%   { transform: scale(1);   opacity: .9; }
+    100% { transform: scale(2.6); opacity: 0; }
+}
+
+/* ==========================================================================
+   TRAIL SLIDER — index section only
+   ========================================================================== */
+.trailer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 360ms var(--ease);
+}
+body[data-section="0"] .trailer { opacity: 1; pointer-events: auto; }
+.trailer__label {
+    font-family: var(--font-mono);
+    font-size: .52rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.trailer input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 92px;
+    height: 14px;
+    background: transparent;
+    cursor: pointer;
+}
+.trailer input[type="range"]::-webkit-slider-runnable-track {
+    height: 2px; border-radius: 2px; background: var(--rule-strong);
+}
+.trailer input[type="range"]::-moz-range-track {
+    height: 2px; border-radius: 2px; background: var(--rule-strong);
+}
+.trailer input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 11px; height: 11px;
+    margin-top: -4.5px;
+    border-radius: 50%;
+    background: var(--accent-ink);
+    border: 0;
+    transition: background-color var(--accent-t) var(--ease);
+}
+.trailer input[type="range"]::-moz-range-thumb {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--accent-ink);
+    border: 0;
 }
 
 /* ==========================================================================
@@ -999,7 +1135,10 @@ img { max-width: 100%; display: block; }
         border-top: 1px solid var(--rule);
         padding-bottom: env(safe-area-inset-bottom);
     }
-    .social-link { width: 40px; height: 34px; }
+    .social-link { width: 36px; height: 34px; flex: 0 0 auto; }
+    .social-link__label { display: none; }
+    .social-sidebar { overflow-x: auto; overflow-y: hidden; justify-content: flex-start; padding: 0 6px; }
+    .trailer { display: none; }
 
     .stage {
         grid-template-columns: 1fr;
